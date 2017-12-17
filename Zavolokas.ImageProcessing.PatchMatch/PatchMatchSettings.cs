@@ -1,0 +1,54 @@
+﻿using System;
+
+namespace Zavolokas.ImageProcessing.PatchMatch
+{
+    public sealed class PatchMatchSettings: ICloneable
+    {
+        public byte PatchSize = 11;
+        public byte IterationsAmount = 5;
+        public byte PremergeIterationsAmount = 2;
+        public double RandomSearchRadius = 2;
+        public double RandomSearchAlpha = 0.5;
+        public int MinSearchWindowSize = 240;
+        public byte ThreadsCount;
+        public int NotDividableMinAmountElements = 80;
+        public double StablePixelsProcent = 1;
+        public byte MarkupIterationsAmount = 5;
+        public int MaxAllowedTuIterations = int.MaxValue;
+        public bool RestrictTuIterations = false;
+
+        //todo: remove these settings
+        public byte ProgressEventFrequency = 10;
+        public int TileWidth = 128;
+        public int TileHeight = 128;
+
+        public PatchMatchSettings()
+        {
+            ThreadsCount = (byte)Environment.ProcessorCount;
+        }
+
+        public object Clone()
+        {
+            return new PatchMatchSettings() 
+            {
+                PatchSize = PatchSize,
+                IterationsAmount = IterationsAmount,
+                PremergeIterationsAmount = PremergeIterationsAmount,
+                RandomSearchRadius = RandomSearchRadius,
+                RandomSearchAlpha = RandomSearchAlpha,
+                MinSearchWindowSize = MinSearchWindowSize,
+                ThreadsCount = ThreadsCount,
+                NotDividableMinAmountElements = NotDividableMinAmountElements,
+                StablePixelsProcent = StablePixelsProcent,
+                MarkupIterationsAmount = MarkupIterationsAmount,
+                MaxAllowedTuIterations = MaxAllowedTuIterations,
+                RestrictTuIterations = RestrictTuIterations,
+
+                ProgressEventFrequency = ProgressEventFrequency,
+                TileWidth = TileWidth,
+                TileHeight = TileHeight
+            };
+            
+        }
+    }
+}
