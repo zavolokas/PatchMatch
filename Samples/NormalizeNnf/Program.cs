@@ -2,10 +2,10 @@
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
-using Zavolokas;
 using Zavolokas.GdiExtensions;
 using Zavolokas.ImageProcessing.PatchMatch;
 using Zavolokas.Structures;
+using Zavolokas.Utils.Processes;
 
 namespace NormalizeNnf
 {
