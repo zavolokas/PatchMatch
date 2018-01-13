@@ -22,7 +22,7 @@ namespace Zavolokas.ImageProcessing.Parallel.PatchMatch
                 throw new ArgumentNullException(nameof(data));
 
             PatchMatchNnfBuilder.RunRandomNnfInitIteration(data.Nnf, data.Map, data.DestImage, data.SrcImage, data.DestImagePixelsArea, _calculator, data.Settings);
-
+            
             return new[] {data};
         }
     }

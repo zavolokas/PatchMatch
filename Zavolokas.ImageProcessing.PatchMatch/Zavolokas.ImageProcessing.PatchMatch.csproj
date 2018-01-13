@@ -57,6 +57,7 @@
     <Compile Include="ImagePatchDistanceCalculator.cs" />
     <Compile Include="MappedAreasInfo.cs" />
     <Compile Include="PatchMatchNnfBuilder.cs" />
+    <Compile Include="PatchMatchNnfBuilder2.cs" />
     <Compile Include="PatchMatchSettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
