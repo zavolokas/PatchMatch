@@ -4,7 +4,7 @@ namespace Zavolokas.ImageProcessing.PatchMatch
 {
     public interface IPatchMatchNnfBuilder
     {
-        void RunBuildNnfIteration(Nnf nnf, Area2DMap map, ZsImage destImage, ZsImage srcImage, Area2D destPixelsArea, ImagePatchDistanceCalculator patchDistanceCalculator, NeighboursCheckDirection direction, PatchMatchSettings settings);
-        void RunRandomNnfInitIteration(Nnf nnf, Area2DMap map, ZsImage destImage, ZsImage srcImage, Area2D destPixelsArea, ImagePatchDistanceCalculator patchDistanceCalculator, PatchMatchSettings settings);
+        void RunRandomNnfInitIteration(Nnf nnf, ZsImage destImage, ZsImage srcImage, ImagePatchDistanceCalculator patchDistanceCalculator, PatchMatchSettings settings, Area2DMap map, Area2D destPixelsArea);
+        void RunBuildNnfIteration(Nnf nnf, ZsImage destImage, ZsImage srcImage, NeighboursCheckDirection direction, ImagePatchDistanceCalculator patchDistanceCalculator, PatchMatchSettings settings, Area2DMap map, Area2D destPixelsArea);
     }
 }
