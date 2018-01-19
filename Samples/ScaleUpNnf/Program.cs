@@ -79,9 +79,9 @@ namespace ScaleUpNnf
 
             // Create the nnf for the small variant of the images
             // with a couple of iterations.
-            patchMatchNnfBuilder.RunRandomNnfInitIteration(nnf, destImage, srcImage, calculator, settings, map, destImagePixelsArea);
-            patchMatchNnfBuilder.RunBuildNnfIteration(nnf, destImage, srcImage, NeighboursCheckDirection.Forward, calculator, settings, map, destImagePixelsArea);
-            patchMatchNnfBuilder.RunBuildNnfIteration(nnf, destImage, srcImage, NeighboursCheckDirection.Backward, calculator, settings, map, destImagePixelsArea);
+            patchMatchNnfBuilder.RunRandomNnfInitIteration(nnf, destImage, srcImage, settings, calculator, map, destImagePixelsArea);
+            patchMatchNnfBuilder.RunBuildNnfIteration(nnf, destImage, srcImage, NeighboursCheckDirection.Forward, settings, calculator, map, destImagePixelsArea);
+            patchMatchNnfBuilder.RunBuildNnfIteration(nnf, destImage, srcImage, NeighboursCheckDirection.Backward, settings, calculator, map, destImagePixelsArea);
 
             Nnf scaledNnf = null;
 

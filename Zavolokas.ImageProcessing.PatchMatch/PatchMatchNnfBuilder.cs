@@ -13,7 +13,7 @@ namespace Zavolokas.ImageProcessing.PatchMatch
 
     public class PatchMatchNnfBuilder : IPatchMatchNnfBuilder
     {
-        public unsafe void RunRandomNnfInitIteration(Nnf nnf, ZsImage destImage, ZsImage srcImage, ImagePatchDistanceCalculator patchDistanceCalculator, PatchMatchSettings settings, Area2DMap map, Area2D destPixelsArea)
+        public unsafe void RunRandomNnfInitIteration(Nnf nnf, ZsImage destImage, ZsImage srcImage, PatchMatchSettings settings, ImagePatchDistanceCalculator patchDistanceCalculator, Area2DMap map, Area2D destPixelsArea)
         {
             var nnfdata = nnf.GetNnfItems();
             var patchSize = settings.PatchSize;
@@ -115,7 +115,7 @@ namespace Zavolokas.ImageProcessing.PatchMatch
             });
         }
 
-        public unsafe void RunBuildNnfIteration(Nnf nnf, ZsImage destImage, ZsImage srcImage, NeighboursCheckDirection direction, ImagePatchDistanceCalculator patchDistanceCalculator, PatchMatchSettings settings, Area2DMap map, Area2D destPixelsArea)
+        public unsafe void RunBuildNnfIteration(Nnf nnf, ZsImage destImage, ZsImage srcImage, NeighboursCheckDirection direction, PatchMatchSettings settings, ImagePatchDistanceCalculator patchDistanceCalculator, Area2DMap map, Area2D destPixelsArea)
         {
             sbyte offs = (sbyte)(direction == NeighboursCheckDirection.Forward ? 1 : -1);
             sbyte[][] offsets =
