@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using Grapute;
 using Zavolokas.ImageProcessing.PatchMatch;
+using Zavolokas.Structures;
 
 namespace Zavolokas.ImageProcessing.Parallel.PatchMatch
 {
@@ -23,11 +24,17 @@ namespace Zavolokas.ImageProcessing.Parallel.PatchMatch
                 var nnfs = inputs.Select(i => i.Nnf).ToArray();
                 var maps = inputs.Select(i => i.Map).ToArray();
 
-                var result = PatchMatchNnfBuilder.MergeNnfs(nnfs, maps, mergedData.DestImage.Width, mergedData.SrcImage.Width,
-                    mergedData.Settings);
+                mergedData.Nnf = PatchMatchNnfBuilder2.MergeNnfs(nnfs, maps);
 
-                mergedData.Nnf = result.Item1;
-                mergedData.Map = result.Item2;
+                mergedData.Map = maps
+                    .Skip(1)
+                    .Aggregate(maps[0], (a, b) =>
+                        {
+                            return new Area2DMapBuilder()
+                                .InitNewMap(a)
+                                .AddMapping(b)
+                                .Build();
+                        });
 
                 return new[] { mergedData };
             }
