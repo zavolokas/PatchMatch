@@ -267,7 +267,7 @@ namespace Zavolokas.ImageProcessing.PatchMatch
         }
 
         // TODO: (nnfs are should be for the same images)
-        public static unsafe Nnf MergeNnfs(this Nnf[] nnfs, Area2DMap[] maps, bool forward = true)
+        public static unsafe Nnf MergeNnfs(this Nnf[] nnfs, Area2DMap[] maps)
         {
             if (nnfs == null || nnfs.Length < 1) throw new ArgumentException("At least one nnf is expected");
             if (nnfs.Length != maps.Length) throw new ArgumentException("Amount of passed Maps should be equal to amount of passed Nnfs");
@@ -286,7 +286,7 @@ namespace Zavolokas.ImageProcessing.PatchMatch
                 // merge NNfs. Mappings can not be merged as they 
                 // would have totally different source areas.
 
-                //var forward = true;
+                const bool forward = true;
                 var destNnf = nnfs[0].GetNnfItems();
                 var destNnfMap = maps[0];
                 var destImageWidth = nnfs[0].DstWidth;
