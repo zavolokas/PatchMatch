@@ -85,7 +85,7 @@ namespace NormalizeNnf
                 .SaveTo(fileName1, ImageFormat.Png);
 
             // The scaling of the NNF from the small images to the bigger ones.
-            PatchMatchNnfBuilder2.NormalizeNnf(nnf, removeArea);
+            NnfUtils.NormalizeNnf(nnf, removeArea);
 
             // Prepare results, save and show them
             string fileName2 = @"..\..\nnf2_normalized.png";
