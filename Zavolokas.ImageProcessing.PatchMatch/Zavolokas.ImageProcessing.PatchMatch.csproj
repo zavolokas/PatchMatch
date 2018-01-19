@@ -55,6 +55,7 @@
     <Compile Include="Cie76ImagePatchDistanceCalculator.cs" />
     <Compile Include="ImagePatchDistance.cs" />
     <Compile Include="ImagePatchDistanceCalculator.cs" />
+    <Compile Include="IParallelOptions.cs" />
     <Compile Include="MappedAreasInfo.cs" />
     <Compile Include="PatchMatchNnfBuilder.cs" />
     <Compile Include="NnfUtils.cs" />

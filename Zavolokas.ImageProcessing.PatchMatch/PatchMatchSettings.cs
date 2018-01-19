@@ -2,7 +2,8 @@
 
 namespace Zavolokas.ImageProcessing.PatchMatch
 {
-    public sealed class PatchMatchSettings: ICloneable
+
+    public sealed class PatchMatchSettings : IParallelOptions, ICloneable
     {
         public byte PatchSize = 11;
         public byte IterationsAmount = 5;
@@ -10,8 +11,6 @@ namespace Zavolokas.ImageProcessing.PatchMatch
         public double RandomSearchRadius = 2;
         public double RandomSearchAlpha = 0.5;
         public int MinSearchWindowSize = 240;
-        public byte ThreadsCount;
-        public int NotDividableMinAmountElements = 80;
         public double StablePixelsProcent = 1;
         public byte MarkupIterationsAmount = 5;
         public int MaxAllowedTuIterations = int.MaxValue;
@@ -22,6 +21,9 @@ namespace Zavolokas.ImageProcessing.PatchMatch
         public int TileWidth = 128;
         public int TileHeight = 128;
 
+        public int NotDividableMinAmountElements { get; set; } = 80;
+        public byte ThreadsCount { get; set; }
+
         public PatchMatchSettings()
         {
             ThreadsCount = (byte)Environment.ProcessorCount;
@@ -29,7 +31,7 @@ namespace Zavolokas.ImageProcessing.PatchMatch
 
         public object Clone()
         {
-            return new PatchMatchSettings() 
+            return new PatchMatchSettings()
             {
                 PatchSize = PatchSize,
                 IterationsAmount = IterationsAmount,
@@ -48,7 +50,7 @@ namespace Zavolokas.ImageProcessing.PatchMatch
                 TileWidth = TileWidth,
                 TileHeight = TileHeight
             };
-            
+
         }
     }
 }
