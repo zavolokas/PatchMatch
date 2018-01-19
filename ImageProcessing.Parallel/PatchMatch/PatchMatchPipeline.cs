@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.InteropServices;
 using Zavolokas.ImageProcessing.PatchMatch;
 using Grapute;
 
@@ -6,20 +7,25 @@ namespace Zavolokas.ImageProcessing.Parallel.PatchMatch
 {
     public class PatchMatchPipeline : Node<PmData, PmData>
     {
+        private readonly IPatchMatchNnfBuilder _patchMatchNnfBuilder;
         private readonly ImagePatchDistanceCalculator _patchDistanceCalculator;
 
-        public PatchMatchPipeline(ImagePatchDistanceCalculator patchDistanceCalculator)
+        public PatchMatchPipeline(IPatchMatchNnfBuilder patchMatchNnfBuilder, ImagePatchDistanceCalculator patchDistanceCalculator)
         {
+            if (patchMatchNnfBuilder == null)
+                throw new ArgumentNullException(nameof(patchMatchNnfBuilder));
+
             if (patchDistanceCalculator == null)
                 throw new ArgumentNullException(nameof(patchDistanceCalculator));
 
+            _patchMatchNnfBuilder = patchMatchNnfBuilder;
             _patchDistanceCalculator = patchDistanceCalculator;
         }
 
         protected override PmData[] Process(PmData data)
         {
             var node = new NnfSplit()
-                .ForEachOutput(new NnfInit(_patchDistanceCalculator));
+                .ForEachOutput(new NnfInit(_patchMatchNnfBuilder, _patchDistanceCalculator));
 
             node.SetInput(data);
 
@@ -29,7 +35,7 @@ namespace Zavolokas.ImageProcessing.Parallel.PatchMatch
                     ? NeighboursCheckDirection.Forward
                     : NeighboursCheckDirection.Backward;
 
-                node = node.ForEachOutput(new NeighboursCheck(_patchDistanceCalculator, direction));
+                node = node.ForEachOutput(new NeighboursCheck(_patchMatchNnfBuilder, _patchDistanceCalculator, direction));
             }
 
             return node

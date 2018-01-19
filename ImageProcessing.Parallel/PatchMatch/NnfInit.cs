@@ -6,13 +6,18 @@ namespace Zavolokas.ImageProcessing.Parallel.PatchMatch
 {
     public class NnfInit : Node<PmData, PmData>
     {
+        private readonly IPatchMatchNnfBuilder _patchMatchNnfBuilder;
         private readonly ImagePatchDistanceCalculator _calculator;
 
-        public NnfInit(ImagePatchDistanceCalculator calculator)
+        public NnfInit(IPatchMatchNnfBuilder patchMatchNnfBuilder, ImagePatchDistanceCalculator calculator)
         {
+            if (patchMatchNnfBuilder == null)
+                throw new ArgumentNullException(nameof(patchMatchNnfBuilder));
+
             if (calculator == null)
                 throw new ArgumentNullException(nameof(calculator));
 
+            _patchMatchNnfBuilder = patchMatchNnfBuilder;
             _calculator = calculator;
         }
 
@@ -21,7 +26,7 @@ namespace Zavolokas.ImageProcessing.Parallel.PatchMatch
             if (data == null)
                 throw new ArgumentNullException(nameof(data));
 
-            PatchMatchNnfBuilder.RunRandomNnfInitIteration(data.Nnf, data.Map, data.DestImage, data.SrcImage, data.DestImagePixelsArea, _calculator, data.Settings);
+            _patchMatchNnfBuilder.RunRandomNnfInitIteration(data.Nnf, data.Map, data.DestImage, data.SrcImage, data.DestImagePixelsArea, _calculator, data.Settings);
             
             return new[] {data};
         }

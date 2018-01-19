@@ -42,7 +42,9 @@ namespace IgnoreArea
             input.Settings.PatchSize = 5;
             input.Settings.IterationsAmount = 2;
 
-            var nnfPipeline = new PatchMatchPipeline(ImagePatchDistance.Cie76);
+            var patchMatchNnfBuilder = new PatchMatchNnfBuilder();
+
+            var nnfPipeline = new PatchMatchPipeline(patchMatchNnfBuilder, ImagePatchDistance.Cie76);
             nnfPipeline.SetInput(input);
             var nnf = nnfPipeline
                 .Process()

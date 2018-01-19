@@ -38,7 +38,9 @@ namespace PartiallyEmptyImage
             input.Settings.IterationsAmount = 2;
             input.DestImagePixelsArea = destArea.Substract(emptyArea);
 
-            var nnfPipeline = new PatchMatchPipeline(ImagePatchDistance.Cie76);
+            var patchMatchNnfBuilder = new PatchMatchNnfBuilder();
+
+            var nnfPipeline = new PatchMatchPipeline(patchMatchNnfBuilder, ImagePatchDistance.Cie76);
             nnfPipeline.SetInput(input);
             var nnf = nnfPipeline.Process()
                 .Output[0]

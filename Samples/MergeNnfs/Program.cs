@@ -56,7 +56,9 @@ namespace MergeNnfs
             input1.Settings.PatchSize = 5;
             input1.Settings.IterationsAmount = 2;
 
-            var nnf1Pipeline = new PatchMatchPipeline(patchDistanceCalculator);
+            var patchMatchNnfBuilder = new PatchMatchNnfBuilder();
+
+            var nnf1Pipeline = new PatchMatchPipeline(patchMatchNnfBuilder, patchDistanceCalculator);
             nnf1Pipeline.SetInput(input1);
 
             var nnf1 = nnf1Pipeline.Process()
@@ -67,7 +69,7 @@ namespace MergeNnfs
             input2.Settings.PatchSize = 5;
             input2.Settings.IterationsAmount = 2;
 
-            var nnf2Pipeline = new PatchMatchPipeline(patchDistanceCalculator);
+            var nnf2Pipeline = new PatchMatchPipeline(patchMatchNnfBuilder, patchDistanceCalculator);
             nnf2Pipeline.SetInput(input2);
 
             var nnf2 = nnf2Pipeline.Process()
