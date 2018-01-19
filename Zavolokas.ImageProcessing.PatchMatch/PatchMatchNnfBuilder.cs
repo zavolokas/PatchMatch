@@ -7,12 +7,6 @@ using Zavolokas.Structures;
 
 namespace Zavolokas.ImageProcessing.PatchMatch
 {
-    public enum NeighboursCheckDirection
-    {
-        Forward,
-        Backward
-    }
-
     // NOTE: We avoid source patch overlap with the remove area when we build NNF 
     // because than we have a chance to calculate a new color either based
     // on an empty pixels or on the existing one that we want to inpaint.
