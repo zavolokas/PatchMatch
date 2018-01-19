@@ -26,7 +26,7 @@ namespace Zavolokas.ImageProcessing.Parallel.PatchMatch
             if (data == null)
                 throw new ArgumentNullException(nameof(data));
 
-            _patchMatchNnfBuilder.RunRandomNnfInitIteration(data.Nnf, data.DestImage, data.SrcImage, _calculator, data.Settings, data.Map, data.DestImagePixelsArea);
+            _patchMatchNnfBuilder.RunRandomNnfInitIteration(data.Nnf, data.DestImage, data.SrcImage, data.Settings, _calculator, data.Map, data.DestImagePixelsArea);
             
             return new[] {data};
         }
