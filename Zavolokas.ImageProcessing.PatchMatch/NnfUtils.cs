@@ -6,7 +6,7 @@ using Zavolokas.Structures;
 
 namespace Zavolokas.ImageProcessing.PatchMatch
 {
-    public static class NnfPatchMatchNnfBuilder2
+    public static class NnfUtils
     {
         public static void NormalizeNnf(Nnf nnf, Area2D destArea)
         {
