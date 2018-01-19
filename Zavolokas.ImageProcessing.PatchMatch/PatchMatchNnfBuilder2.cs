@@ -6,7 +6,7 @@ using Zavolokas.Structures;
 
 namespace Zavolokas.ImageProcessing.PatchMatch
 {
-    public static class PatchMatchNnfBuilder2
+    public static class NnfPatchMatchNnfBuilder2
     {
         public static void NormalizeNnf(Nnf nnf, Area2D destArea)
         {
@@ -266,7 +266,8 @@ namespace Zavolokas.ImageProcessing.PatchMatch
             return nnf2x;
         }
 
-        public static unsafe Nnf MergeNnfs(Nnf[] nnfs, Area2DMap[] maps, int destImageWidth, int srcImageWidth, bool forward)
+        // TODO: (nnfs are should be for the same images)
+        public static unsafe Nnf MergeNnfs(this Nnf[] nnfs, Area2DMap[] maps, bool forward = true)
         {
             if (nnfs == null || nnfs.Length < 1) throw new ArgumentException("At least one nnf is expected");
             if (nnfs.Length != maps.Length) throw new ArgumentException("Amount of passed Maps should be equal to amount of passed Nnfs");
@@ -278,15 +279,18 @@ namespace Zavolokas.ImageProcessing.PatchMatch
                 // The source images can not be different as well.
                 // When different source images are desired those
                 // images should be merged to one image and mappings 
-                // should be adjusted to map to a particular regin 
+                // should be adjusted to map to a particular region 
                 // on the source image.
                 // Differen source images problem. In that case we 
                 // have a problem with different mappings when we 
                 // merge NNfs. Mappings can not be merged as they 
                 // would have totally different source areas.
 
+                //var forward = true;
                 var destNnf = nnfs[0].GetNnfItems();
                 var destNnfMap = maps[0];
+                var destImageWidth = nnfs[0].DstWidth;
+                var srcImageWidth = nnfs[0].SourceWidth;
 
                 // Merge the rest NNFs to the first one.
                 for (int i = 1; i < nnfs.Length; i++)
@@ -370,11 +374,9 @@ namespace Zavolokas.ImageProcessing.PatchMatch
                         .AddMapping(srcNnfMap)
                         .Build();
                 }
-
-                return new Tuple<Nnf, Area2DMap>(nnfs[0], destNnfMap);
             }
 
-            return new Tuple<Nnf, Area2DMap>(nnfs[0], maps[0]);
+            return nnfs[0];
         }
 
         private static MappedAreasInfo[] ExtractMappedAreasInfo(IAreasMapping map, int destImageWidth, int srcImageWidth, bool forward)
