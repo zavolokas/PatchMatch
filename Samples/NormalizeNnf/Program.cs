@@ -64,9 +64,9 @@ namespace NormalizeNnf
 
             // Create the nnf for the small variant of the images
             // with a couple of iterations.
-            patchMatchNnfBuilder.RunRandomNnfInitIteration(nnf, map, destImage, srcImage, destImagePixelsArea, calculator, settings);
-            patchMatchNnfBuilder.RunBuildNnfIteration(nnf, map, destImage, srcImage, destImagePixelsArea, calculator, NeighboursCheckDirection.Forward, settings);
-            patchMatchNnfBuilder.RunBuildNnfIteration(nnf, map, destImage, srcImage, destImagePixelsArea, calculator, NeighboursCheckDirection.Backward, settings);
+            patchMatchNnfBuilder.RunRandomNnfInitIteration(nnf, destImage, srcImage, calculator, settings, map, destImagePixelsArea);
+            patchMatchNnfBuilder.RunBuildNnfIteration(nnf, destImage, srcImage, NeighboursCheckDirection.Forward, calculator, settings, map, destImagePixelsArea);
+            patchMatchNnfBuilder.RunBuildNnfIteration(nnf, destImage, srcImage, NeighboursCheckDirection.Backward, calculator, settings, map, destImagePixelsArea);
 
             // Create a mapping of the areas on the dest and source areas.
             map = new Area2DMapBuilder() //InpaintMapBuilder()
@@ -76,9 +76,9 @@ namespace NormalizeNnf
                 .SetIgnoredSourcedArea(removeArea)
                 .Build();
 
-            patchMatchNnfBuilder.RunRandomNnfInitIteration(nnf, map, destImage, srcImage, destImagePixelsArea, calculator, settings);
-            patchMatchNnfBuilder.RunBuildNnfIteration(nnf, map, destImage, srcImage, destImagePixelsArea, calculator, NeighboursCheckDirection.Forward, settings);
-            patchMatchNnfBuilder.RunBuildNnfIteration(nnf, map, destImage, srcImage, destImagePixelsArea, calculator, NeighboursCheckDirection.Backward, settings);
+            patchMatchNnfBuilder.RunRandomNnfInitIteration(nnf, destImage, srcImage, calculator, settings, map, destImagePixelsArea);
+            patchMatchNnfBuilder.RunBuildNnfIteration(nnf, destImage, srcImage, NeighboursCheckDirection.Forward, calculator, settings, map, destImagePixelsArea);
+            patchMatchNnfBuilder.RunBuildNnfIteration(nnf, destImage, srcImage, NeighboursCheckDirection.Backward, calculator, settings, map, destImagePixelsArea);
 
             string fileName1 = @"..\..\nnf1_pure.png";
             nnf

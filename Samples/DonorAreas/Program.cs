@@ -60,9 +60,9 @@ namespace DonorAreas
 
             // Create the nnf for the small variant of the images
             // with a couple of iterations.
-            patchMatchNnfBuilder.RunRandomNnfInitIteration(nnf, map, destImage, srcImage, destImagePixelsArea, calculator, settings);
-            patchMatchNnfBuilder.RunBuildNnfIteration(nnf, map, destImage, srcImage, destImagePixelsArea, calculator, NeighboursCheckDirection.Forward, settings);
-            patchMatchNnfBuilder.RunBuildNnfIteration(nnf, map, destImage, srcImage, destImagePixelsArea, calculator, NeighboursCheckDirection.Backward, settings);
+            patchMatchNnfBuilder.RunRandomNnfInitIteration(nnf, destImage, srcImage, calculator, settings, map, destImagePixelsArea);
+            patchMatchNnfBuilder.RunBuildNnfIteration(nnf, destImage, srcImage, NeighboursCheckDirection.Forward, calculator, settings, map, destImagePixelsArea);
+            patchMatchNnfBuilder.RunBuildNnfIteration(nnf, destImage, srcImage, NeighboursCheckDirection.Backward, calculator, settings, map, destImagePixelsArea);
 
             // Restore dest image from the NNF and source image.
             nnf
