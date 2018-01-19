@@ -101,22 +101,24 @@ namespace Reshuffling
                 .FromRgbToBitmap()
                 .SaveTo($"..\\..\\dest.png", ImageFormat.Png);
 
-            PatchMatchNnfBuilder.RunRandomNnfInitIteration(nnf, map, destImage, srcImage, destImageArea, calculator, settings);
-            PatchMatchNnfBuilder.RunRandomNnfInitIteration(nnfr, map, srcImage, destImage, srcImageArea, calculator, settings);
+            var patchMatchNnfBuilder = new PatchMatchNnfBuilder();
+
+            patchMatchNnfBuilder.RunRandomNnfInitIteration(nnf, map, destImage, srcImage, destImageArea, calculator, settings);
+            patchMatchNnfBuilder.RunRandomNnfInitIteration(nnfr, map, srcImage, destImage, srcImageArea, calculator, settings);
 
             for (int j = 0; j < 3; j++)
             {
-                PatchMatchNnfBuilder.RunBuildNnfIteration(nnf, map, destImage, srcImage, destImageArea, calculator, NeighboursCheckDirection.Forward, settings);
+                patchMatchNnfBuilder.RunBuildNnfIteration(nnf, map, destImage, srcImage, destImageArea, calculator, NeighboursCheckDirection.Forward, settings);
                 Console.WriteLine($"\tIteration {j * 2}");
-                PatchMatchNnfBuilder.RunBuildNnfIteration(nnf, map, destImage, srcImage, destImageArea, calculator, NeighboursCheckDirection.Backward, settings);
+                patchMatchNnfBuilder.RunBuildNnfIteration(nnf, map, destImage, srcImage, destImageArea, calculator, NeighboursCheckDirection.Backward, settings);
                 Console.WriteLine($"\tIteration {j * 2 + 1}");
             }
 
             for (int j = 0; j < 3; j++)
             {
-                PatchMatchNnfBuilder.RunBuildNnfIteration(nnfr, map, srcImage, destImage, srcImageArea, calculator, NeighboursCheckDirection.Forward, settings);
+                patchMatchNnfBuilder.RunBuildNnfIteration(nnfr, map, srcImage, destImage, srcImageArea, calculator, NeighboursCheckDirection.Forward, settings);
                 Console.WriteLine($"\tIteration {j * 2}");
-                PatchMatchNnfBuilder.RunBuildNnfIteration(nnfr, map, srcImage, destImage, srcImageArea, calculator, NeighboursCheckDirection.Backward, settings);
+                patchMatchNnfBuilder.RunBuildNnfIteration(nnfr, map, srcImage, destImage, srcImageArea, calculator, NeighboursCheckDirection.Backward, settings);
                 Console.WriteLine($"\tIteration {j * 2 + 1}");
             }
 

@@ -75,12 +75,13 @@ namespace ScaleUpNnf
             };
 
             var calculator = ImagePatchDistance.Cie76;
+            var patchMatchNnfBuilder = new PatchMatchNnfBuilder();
 
             // Create the nnf for the small variant of the images
             // with a couple of iterations.
-            PatchMatchNnfBuilder.RunRandomNnfInitIteration(nnf, map, destSmallImage, srcSmallImage, destSmallImagePixelsArea, calculator, settings);
-            PatchMatchNnfBuilder.RunBuildNnfIteration(nnf, map, destSmallImage, srcSmallImage, destSmallImagePixelsArea, calculator, NeighboursCheckDirection.Forward, settings);
-            PatchMatchNnfBuilder.RunBuildNnfIteration(nnf, map, destSmallImage, srcSmallImage, destSmallImagePixelsArea, calculator, NeighboursCheckDirection.Backward, settings);
+            patchMatchNnfBuilder.RunRandomNnfInitIteration(nnf, map, destSmallImage, srcSmallImage, destSmallImagePixelsArea, calculator, settings);
+            patchMatchNnfBuilder.RunBuildNnfIteration(nnf, map, destSmallImage, srcSmallImage, destSmallImagePixelsArea, calculator, NeighboursCheckDirection.Forward, settings);
+            patchMatchNnfBuilder.RunBuildNnfIteration(nnf, map, destSmallImage, srcSmallImage, destSmallImagePixelsArea, calculator, NeighboursCheckDirection.Backward, settings);
 
             Nnf scaledNnf = null;
 

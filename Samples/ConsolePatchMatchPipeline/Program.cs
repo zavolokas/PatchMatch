@@ -27,7 +27,9 @@ namespace ConsolePatchMatchPipeline
             input.Settings.PatchSize = 5;
             input.Settings.IterationsAmount = 2;
 
-            var pipeline = new PatchMatchPipeline(ImagePatchDistance.Cie2000);
+            var patchMatchNnfBuilder = new PatchMatchNnfBuilder();
+
+            var pipeline = new PatchMatchPipeline(patchMatchNnfBuilder, ImagePatchDistance.Cie2000);
             pipeline.SetInput(input);
 
             var data = pipeline.Process()

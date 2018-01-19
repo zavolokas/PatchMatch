@@ -56,11 +56,13 @@ namespace DonorAreas
             var calculator = ImagePatchDistance.Cie76;
 
             var destImagePixelsArea = Area2D.Create(0, 0, destImage.Width, destImage.Height);
+            var patchMatchNnfBuilder = new PatchMatchNnfBuilder();
+
             // Create the nnf for the small variant of the images
             // with a couple of iterations.
-            PatchMatchNnfBuilder.RunRandomNnfInitIteration(nnf, map, destImage, srcImage, destImagePixelsArea, calculator, settings);
-            PatchMatchNnfBuilder.RunBuildNnfIteration(nnf, map, destImage, srcImage, destImagePixelsArea, calculator, NeighboursCheckDirection.Forward, settings);
-            PatchMatchNnfBuilder.RunBuildNnfIteration(nnf, map, destImage, srcImage, destImagePixelsArea, calculator, NeighboursCheckDirection.Backward, settings);
+            patchMatchNnfBuilder.RunRandomNnfInitIteration(nnf, map, destImage, srcImage, destImagePixelsArea, calculator, settings);
+            patchMatchNnfBuilder.RunBuildNnfIteration(nnf, map, destImage, srcImage, destImagePixelsArea, calculator, NeighboursCheckDirection.Forward, settings);
+            patchMatchNnfBuilder.RunBuildNnfIteration(nnf, map, destImage, srcImage, destImagePixelsArea, calculator, NeighboursCheckDirection.Backward, settings);
 
             // Restore dest image from the NNF and source image.
             nnf

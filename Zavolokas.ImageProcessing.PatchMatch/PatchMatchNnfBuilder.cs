@@ -11,10 +11,9 @@ namespace Zavolokas.ImageProcessing.PatchMatch
     // because than we have a chance to calculate a new color either based
     // on an empty pixels or on the existing one that we want to inpaint.
 
-    // TODO: why is this class static??
-    public static class PatchMatchNnfBuilder
+    public class PatchMatchNnfBuilder : IPatchMatchNnfBuilder
     {
-        public static unsafe void RunRandomNnfInitIteration(Nnf nnf, Area2DMap map, ZsImage destImage, ZsImage srcImage, Area2D destPixelsArea, ImagePatchDistanceCalculator patchDistanceCalculator, PatchMatchSettings settings)
+        public unsafe void RunRandomNnfInitIteration(Nnf nnf, Area2DMap map, ZsImage destImage, ZsImage srcImage, Area2D destPixelsArea, ImagePatchDistanceCalculator patchDistanceCalculator, PatchMatchSettings settings)
         {
             var nnfdata = nnf.GetNnfItems();
             var patchSize = settings.PatchSize;
@@ -116,7 +115,7 @@ namespace Zavolokas.ImageProcessing.PatchMatch
             });
         }
 
-        public static unsafe void RunBuildNnfIteration(Nnf nnf, Area2DMap map, ZsImage destImage, ZsImage srcImage, Area2D destPixelsArea, ImagePatchDistanceCalculator patchDistanceCalculator, NeighboursCheckDirection direction, PatchMatchSettings settings)
+        public unsafe void RunBuildNnfIteration(Nnf nnf, Area2DMap map, ZsImage destImage, ZsImage srcImage, Area2D destPixelsArea, ImagePatchDistanceCalculator patchDistanceCalculator, NeighboursCheckDirection direction, PatchMatchSettings settings)
         {
             sbyte offs = (sbyte)(direction == NeighboursCheckDirection.Forward ? 1 : -1);
             sbyte[][] offsets =
