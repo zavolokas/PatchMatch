@@ -13,8 +13,45 @@ namespace Zavolokas.ImageProcessing.PatchMatch
 
     public class PatchMatchNnfBuilder : IPatchMatchNnfBuilder
     {
-        public unsafe void RunRandomNnfInitIteration(Nnf nnf, ZsImage destImage, ZsImage srcImage, PatchMatchSettings settings, ImagePatchDistanceCalculator patchDistanceCalculator, Area2DMap map, Area2D destPixelsArea)
+        public void RunRandomNnfInitIteration(Nnf nnf, ZsImage destImage, ZsImage srcImage, PatchMatchSettings settings)
         {
+            var patchDistanceCalculator = ImagePatchDistance.Cie76;
+            RunRandomNnfInitIteration(nnf, destImage, srcImage, settings, patchDistanceCalculator);
+        }
+
+        public void RunRandomNnfInitIteration(Nnf nnf, ZsImage destImage, ZsImage srcImage, PatchMatchSettings settings,
+            ImagePatchDistanceCalculator patchDistanceCalculator)
+        {
+            if (destImage == null) throw new ArgumentNullException(nameof(destImage));
+            if (srcImage == null) throw new ArgumentNullException(nameof(srcImage));
+
+            var destArea = Area2D.Create(0, 0, destImage.Width, destImage.Height);
+            var srcArea = Area2D.Create(0, 0, srcImage.Width, srcImage.Height);
+            var map = new Area2DMapBuilder()
+                .InitNewMap(destArea, srcArea)
+                .Build();
+            RunRandomNnfInitIteration(nnf, destImage, srcImage, settings, patchDistanceCalculator, map);
+        }
+
+        public void RunRandomNnfInitIteration(Nnf nnf, ZsImage destImage, ZsImage srcImage, PatchMatchSettings settings,
+            ImagePatchDistanceCalculator patchDistanceCalculator, Area2DMap areasMapping)
+        {
+            if (destImage == null) throw new ArgumentNullException(nameof(destImage));
+
+            var destPixelsArea = Area2D.Create(0,0,destImage.Width, destImage.Height);
+            RunRandomNnfInitIteration(nnf, destImage, srcImage, settings, patchDistanceCalculator, areasMapping, destPixelsArea);
+        }
+
+        public unsafe void RunRandomNnfInitIteration(Nnf nnf, ZsImage destImage, ZsImage srcImage, PatchMatchSettings settings, ImagePatchDistanceCalculator patchDistanceCalculator, Area2DMap areasMapping, Area2D destPixelsArea)
+        {
+            if (nnf == null) throw new ArgumentNullException(nameof(nnf));
+            if (destImage == null) throw new ArgumentNullException(nameof(destImage));
+            if (srcImage == null) throw new ArgumentNullException(nameof(srcImage));
+            if (settings == null) throw new ArgumentNullException(nameof(settings));
+            if (patchDistanceCalculator == null) throw new ArgumentNullException(nameof(patchDistanceCalculator));
+            if (areasMapping == null) throw new ArgumentNullException(nameof(areasMapping));
+            if (destPixelsArea == null) throw new ArgumentNullException(nameof(destPixelsArea));
+
             var nnfdata = nnf.GetNnfItems();
             var patchSize = settings.PatchSize;
             var patchPointsAmount = patchSize * patchSize;
@@ -23,16 +60,16 @@ namespace Zavolokas.ImageProcessing.PatchMatch
 
             // Decide on how many partitions we should divade the processing
             // of the elements.
-            var partsCount = map.DestElementsCount > settings.NotDividableMinAmountElements
+            var partsCount = areasMapping.DestElementsCount > settings.NotDividableMinAmountElements
                 ? settings.ThreadsCount
                 : 1;
-            var partSize = (int)(map.DestElementsCount / partsCount);
+            var partSize = (int)(areasMapping.DestElementsCount / partsCount);
 
-            var pixelsArea = (map as IAreasMapping).DestArea;
+            var pixelsArea = (areasMapping as IAreasMapping).DestArea;
             var destPointsIndexes = GetAreaPointsIndexes(pixelsArea, destImageWidth, NeighboursCheckDirection.Forward);
             pixelsArea = pixelsArea.Intersect(destPixelsArea);
             var destAvailablePixelsIndexes = GetAreaPointsIndexes(pixelsArea, destImageWidth, NeighboursCheckDirection.Forward);
-            var mappings = ExtractMappedAreasInfo(map, destImageWidth, srcImageWidth, NeighboursCheckDirection.Forward);
+            var mappings = ExtractMappedAreasInfo(areasMapping, destImageWidth, srcImageWidth, NeighboursCheckDirection.Forward);
 
             //for (int partIndex = 0; partIndex < partsCount; partIndex++)
             Parallel.For(0, partsCount, partIndex =>
@@ -64,8 +101,8 @@ namespace Zavolokas.ImageProcessing.PatchMatch
 
                 var firstPointIndex = partIndex * partSize;
                 var lastPointIndex = firstPointIndex + partSize - 1;
-                if (partIndex == partsCount - 1) lastPointIndex = map.DestElementsCount - 1;
-                if (lastPointIndex > map.DestElementsCount) lastPointIndex = map.DestElementsCount - 1;
+                if (partIndex == partsCount - 1) lastPointIndex = areasMapping.DestElementsCount - 1;
+                if (lastPointIndex > areasMapping.DestElementsCount) lastPointIndex = areasMapping.DestElementsCount - 1;
 
                 // Init the dest & source patch
                 var destPatchPointIndexes = new int[patchPointsAmount];
@@ -115,8 +152,51 @@ namespace Zavolokas.ImageProcessing.PatchMatch
             });
         }
 
-        public unsafe void RunBuildNnfIteration(Nnf nnf, ZsImage destImage, ZsImage srcImage, NeighboursCheckDirection direction, PatchMatchSettings settings, ImagePatchDistanceCalculator patchDistanceCalculator, Area2DMap map, Area2D destPixelsArea)
+        public void RunBuildNnfIteration(Nnf nnf, ZsImage destImage, ZsImage srcImage,
+            NeighboursCheckDirection direction, PatchMatchSettings settings)
         {
+            var patchDistanceCalculator = ImagePatchDistance.Cie76;
+
+            RunBuildNnfIteration(nnf, destImage, srcImage, direction, settings, patchDistanceCalculator);
+        }
+
+        public void RunBuildNnfIteration(Nnf nnf, ZsImage destImage, ZsImage srcImage,
+            NeighboursCheckDirection direction, PatchMatchSettings settings,
+            ImagePatchDistanceCalculator patchDistanceCalculator)
+        {
+            if (destImage == null) throw new ArgumentNullException(nameof(destImage));
+            if (srcImage == null) throw new ArgumentNullException(nameof(srcImage));
+
+            var destArea = Area2D.Create(0, 0, destImage.Width, destImage.Height);
+            var srcArea = Area2D.Create(0, 0, srcImage.Width, srcImage.Height);
+            var map = new Area2DMapBuilder()
+                .InitNewMap(destArea, srcArea)
+                .Build();
+
+            RunBuildNnfIteration(nnf, destImage, srcImage, direction, settings, patchDistanceCalculator, map);
+        }
+
+        public void RunBuildNnfIteration(Nnf nnf, ZsImage destImage, ZsImage srcImage,
+            NeighboursCheckDirection direction, PatchMatchSettings settings,
+            ImagePatchDistanceCalculator patchDistanceCalculator, Area2DMap areasMapping)
+        {
+            if (destImage == null) throw new ArgumentNullException(nameof(destImage));
+
+            var destPixelsArea = Area2D.Create(0, 0, destImage.Width, destImage.Height);
+
+            RunBuildNnfIteration(nnf, destImage, srcImage, direction, settings, patchDistanceCalculator, areasMapping, destPixelsArea);
+        }
+
+        public unsafe void RunBuildNnfIteration(Nnf nnf, ZsImage destImage, ZsImage srcImage, NeighboursCheckDirection direction, PatchMatchSettings settings, ImagePatchDistanceCalculator patchDistanceCalculator, Area2DMap areasMapping, Area2D destPixelsArea)
+        {
+            if (nnf == null) throw new ArgumentNullException(nameof(nnf));
+            if (destImage == null) throw new ArgumentNullException(nameof(destImage));
+            if (srcImage == null) throw new ArgumentNullException(nameof(srcImage));
+            if (settings == null) throw new ArgumentNullException(nameof(settings));
+            if (patchDistanceCalculator == null) throw new ArgumentNullException(nameof(patchDistanceCalculator));
+            if (areasMapping == null) throw new ArgumentNullException(nameof(areasMapping));
+            if (destPixelsArea == null) throw new ArgumentNullException(nameof(destPixelsArea));
+
             sbyte offs = (sbyte)(direction == NeighboursCheckDirection.Forward ? 1 : -1);
             sbyte[][] offsets =
             {
@@ -140,23 +220,23 @@ namespace Zavolokas.ImageProcessing.PatchMatch
 
             // Obtain the data that allow us getting a point index
             // regarding to the process direction(forward or backward)
-            var addModData = GetAddModData(direction, map.DestElementsCount);
+            var addModData = GetAddModData(direction, areasMapping.DestElementsCount);
             var add = addModData.Item1;
             var mod = addModData.Item2;
 
             // Decide on how many partitions we should divade the processing
             // of the elements.
-            var partsCount = map.DestElementsCount > settings.NotDividableMinAmountElements
+            var partsCount = areasMapping.DestElementsCount > settings.NotDividableMinAmountElements
                 ? settings.ThreadsCount
                 : 1;
-            var partSize = map.DestElementsCount / partsCount;
+            var partSize = areasMapping.DestElementsCount / partsCount;
 
-            var pixelsArea = (map as IAreasMapping).DestArea;
+            var pixelsArea = (areasMapping as IAreasMapping).DestArea;
             var destPointIndexes = GetAreaPointsIndexes(pixelsArea, destImageWidth, direction);
             pixelsArea = pixelsArea.Intersect(destPixelsArea);
             var destAvailablePixelsIndexes = GetAreaPointsIndexes(pixelsArea, destImageWidth, direction);
 
-            var mappings = ExtractMappedAreasInfo(map, destImageWidth, srcImageWidth, direction);
+            var mappings = ExtractMappedAreasInfo(areasMapping, destImageWidth, srcImageWidth, direction);
 
             //for (int partIndex = 0; partIndex < partsCount; partIndex++)
             Parallel.For(0, partsCount, partIndex =>
