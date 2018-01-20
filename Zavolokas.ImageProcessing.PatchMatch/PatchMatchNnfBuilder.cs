@@ -13,12 +13,32 @@ namespace Zavolokas.ImageProcessing.PatchMatch
 
     public class PatchMatchNnfBuilder : IPatchMatchNnfBuilder
     {
+        /// <summary>
+        /// Runs the random NNF initialization iteration using the whole areas of the dest and the source images. Uses CIE76 to calculate patch similarity.
+        /// </summary>
+        /// <param name="nnf">The NNF.</param>
+        /// <param name="destImage">The dest image. For each patch at this image we will look for a similar one at the source image.</param>
+        /// <param name="srcImage">The source image. Source of the patches for the dest image.</param>
+        /// <param name="settings">The settings that control parameters of the algorithm.</param>
         public void RunRandomNnfInitIteration(Nnf nnf, ZsImage destImage, ZsImage srcImage, PatchMatchSettings settings)
         {
             var patchDistanceCalculator = ImagePatchDistance.Cie76;
             RunRandomNnfInitIteration(nnf, destImage, srcImage, settings, patchDistanceCalculator);
         }
 
+        /// <summary>
+        /// Runs the random NNF initialization iteration using the whole areas of the dest and the source images.
+        /// </summary>
+        /// <param name="nnf">The NNF.</param>
+        /// <param name="destImage">The dest image. For each patch at this image we will look for a similar one at the source image.</param>
+        /// <param name="srcImage">The source image. Source of the patches for the dest image.</param>
+        /// <param name="settings">The settings that control parameters of the algorithm.</param>
+        /// <param name="patchDistanceCalculator">The calculator that calculates similarity of two patches. By deafult the Cie76 is used.</param>
+        /// <exception cref="ArgumentNullException">
+        /// destImage
+        /// or
+        /// srcImage
+        /// </exception>
         public void RunRandomNnfInitIteration(Nnf nnf, ZsImage destImage, ZsImage srcImage, PatchMatchSettings settings,
             ImagePatchDistanceCalculator patchDistanceCalculator)
         {
@@ -33,6 +53,16 @@ namespace Zavolokas.ImageProcessing.PatchMatch
             RunRandomNnfInitIteration(nnf, destImage, srcImage, settings, patchDistanceCalculator, map);
         }
 
+        /// <summary>
+        /// Runs the random NNF initialization iteration for the associated areas of the dest and the source images.
+        /// </summary>
+        /// <param name="nnf">The NNF.</param>
+        /// <param name="destImage">The dest image. For each patch at this image we will look for a similar one at the source image.</param>
+        /// <param name="srcImage">The source image. Source of the patches for the dest image.</param>
+        /// <param name="settings">The settings that control parameters of the algorithm.</param>
+        /// <param name="patchDistanceCalculator">The calculator that calculates similarity of two patches. By deafult the Cie76 is used.</param>
+        /// <param name="areasMapping">The areas mapping. By default whole area of the dest image is associated with the whole area of the source image.</param>
+        /// <exception cref="ArgumentNullException">destImage</exception>
         public void RunRandomNnfInitIteration(Nnf nnf, ZsImage destImage, ZsImage srcImage, PatchMatchSettings settings,
             ImagePatchDistanceCalculator patchDistanceCalculator, Area2DMap areasMapping)
         {
@@ -42,6 +72,31 @@ namespace Zavolokas.ImageProcessing.PatchMatch
             RunRandomNnfInitIteration(nnf, destImage, srcImage, settings, patchDistanceCalculator, areasMapping, destPixelsArea);
         }
 
+        /// <summary>
+        /// Runs the random NNF initialization iteration for the associated areas of the dest and the source images.
+        /// </summary>
+        /// <param name="nnf">The NNF.</param>
+        /// <param name="destImage">The dest image. For each patch at this image we will look for a similar one at the source image.</param>
+        /// <param name="srcImage">The source image. Source of the patches for the dest image.</param>
+        /// <param name="settings">The settings that control parameters of the algorithm.</param>
+        /// <param name="patchDistanceCalculator">The calculator that calculates similarity of two patches. By deafult the Cie76 is used.</param>
+        /// <param name="areasMapping">The areas mapping. By default whole area of the dest image is associated with the whole area of the source image.</param>
+        /// <param name="destPixelsArea">Area on the dest image that actually containes pixels. By default is the area of the entire image.</param>
+        /// <exception cref="ArgumentNullException">
+        /// nnf
+        /// or
+        /// destImage
+        /// or
+        /// srcImage
+        /// or
+        /// settings
+        /// or
+        /// patchDistanceCalculator
+        /// or
+        /// areasMapping
+        /// or
+        /// destPixelsArea
+        /// </exception>
         public unsafe void RunRandomNnfInitIteration(Nnf nnf, ZsImage destImage, ZsImage srcImage, PatchMatchSettings settings, ImagePatchDistanceCalculator patchDistanceCalculator, Area2DMap areasMapping, Area2D destPixelsArea)
         {
             if (nnf == null) throw new ArgumentNullException(nameof(nnf));
@@ -152,6 +207,14 @@ namespace Zavolokas.ImageProcessing.PatchMatch
             });
         }
 
+        /// <summary>
+        /// Runs the NNF build iteration using the whole areas of the dest and the source images. Uses CIE76 to calculate patch similarity.
+        /// </summary>
+        /// <param name="nnf">The NNF.</param>
+        /// <param name="destImage">The dest image. For each patch at this image we will look for a similar one at the source image.</param>
+        /// <param name="srcImage">The source image. Source of the patches for the dest image.</param>
+        /// <param name="direction">The direction to look for a patches.</param>
+        /// <param name="settings">The settings that control parameters of the algorithm.</param>
         public void RunBuildNnfIteration(Nnf nnf, ZsImage destImage, ZsImage srcImage,
             NeighboursCheckDirection direction, PatchMatchSettings settings)
         {
@@ -160,6 +223,20 @@ namespace Zavolokas.ImageProcessing.PatchMatch
             RunBuildNnfIteration(nnf, destImage, srcImage, direction, settings, patchDistanceCalculator);
         }
 
+        /// <summary>
+        /// Runs the NNF build iteration using the whole areas of the dest and the source images.
+        /// </summary>
+        /// <param name="nnf">The NNF.</param>
+        /// <param name="destImage">The dest image. For each patch at this image we will look for a similar one at the source image.</param>
+        /// <param name="srcImage">The source image. Source of the patches for the dest image.</param>
+        /// <param name="direction">The direction to look for a patches.</param>
+        /// <param name="settings">The settings that control parameters of the algorithm.</param>
+        /// <param name="patchDistanceCalculator">The calculator that calculates similarity of two patches. By deafult the Cie76 is used.</param>
+        /// <exception cref="ArgumentNullException">
+        /// destImage
+        /// or
+        /// srcImage
+        /// </exception>
         public void RunBuildNnfIteration(Nnf nnf, ZsImage destImage, ZsImage srcImage,
             NeighboursCheckDirection direction, PatchMatchSettings settings,
             ImagePatchDistanceCalculator patchDistanceCalculator)
@@ -176,6 +253,17 @@ namespace Zavolokas.ImageProcessing.PatchMatch
             RunBuildNnfIteration(nnf, destImage, srcImage, direction, settings, patchDistanceCalculator, map);
         }
 
+        /// <summary>
+        /// Runs the NNF build iteration for the associated areas of the dest and the source images.
+        /// </summary>
+        /// <param name="nnf">The NNF.</param>
+        /// <param name="destImage">The dest image. For each patch at this image we will look for a similar one at the source image.</param>
+        /// <param name="srcImage">The source image. Source of the patches for the dest image.</param>
+        /// <param name="direction">The direction to look for a patches.</param>
+        /// <param name="settings">The settings that control parameters of the algorithm.</param>
+        /// <param name="patchDistanceCalculator">The calculator that calculates similarity of two patches. By deafult the Cie76 is used.</param>
+        /// <param name="areasMapping">The areas mapping. By default whole area of the dest image is associated with the whole area of the source image.</param>
+        /// <exception cref="ArgumentNullException">destImage</exception>
         public void RunBuildNnfIteration(Nnf nnf, ZsImage destImage, ZsImage srcImage,
             NeighboursCheckDirection direction, PatchMatchSettings settings,
             ImagePatchDistanceCalculator patchDistanceCalculator, Area2DMap areasMapping)
@@ -187,6 +275,32 @@ namespace Zavolokas.ImageProcessing.PatchMatch
             RunBuildNnfIteration(nnf, destImage, srcImage, direction, settings, patchDistanceCalculator, areasMapping, destPixelsArea);
         }
 
+        /// <summary>
+        /// Runs the NNF build iteration for the associated areas of the dest and the source images.
+        /// </summary>
+        /// <param name="nnf">The NNF.</param>
+        /// <param name="destImage">The dest image. For each patch at this image we will look for a similar one at the source image.</param>
+        /// <param name="srcImage">The source image. Source of the patches for the dest image.</param>
+        /// <param name="direction">The direction to look for a patches.</param>
+        /// <param name="settings">The settings that control parameters of the algorithm.</param>
+        /// <param name="patchDistanceCalculator">The calculator that calculates similarity of two patches. By deafult the Cie76 is used.</param>
+        /// <param name="areasMapping">The areas mapping. By default whole area of the dest image is associated with the whole area of the source image.</param>
+        /// <param name="destPixelsArea">Area on the dest image that actually containes pixels. By default is the area of the entire image.</param>
+        /// <exception cref="ArgumentNullException">
+        /// nnf
+        /// or
+        /// destImage
+        /// or
+        /// srcImage
+        /// or
+        /// settings
+        /// or
+        /// patchDistanceCalculator
+        /// or
+        /// areasMapping
+        /// or
+        /// destPixelsArea
+        /// </exception>
         public unsafe void RunBuildNnfIteration(Nnf nnf, ZsImage destImage, ZsImage srcImage, NeighboursCheckDirection direction, PatchMatchSettings settings, ImagePatchDistanceCalculator patchDistanceCalculator, Area2DMap areasMapping, Area2D destPixelsArea)
         {
             if (nnf == null) throw new ArgumentNullException(nameof(nnf));
