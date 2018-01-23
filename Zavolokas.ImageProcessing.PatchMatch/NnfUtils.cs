@@ -8,7 +8,7 @@ namespace Zavolokas.ImageProcessing.PatchMatch
 {
     public static class NnfUtils
     {
-        public static unsafe Nnf ScaleNnf2X(Nnf nnf, ZsImage scaledDestImage, ZsImage scaledSrcImage, IParallelOptions options, Area2DMap scaledMap, ImagePatchDistanceCalculator patchDistanceCalculator, Area2D destPixelsArea)
+        public static unsafe Nnf ScaleNnf2X(Nnf nnf, ZsImage scaledDestImage, ZsImage scaledSrcImage, ParallelOptions options, Area2DMap scaledMap, ImagePatchDistanceCalculator patchDistanceCalculator, Area2D destPixelsArea)
         {
             var patchSize = nnf.PatchSize;
             var patchLength = patchSize * patchSize;
@@ -125,7 +125,7 @@ namespace Zavolokas.ImageProcessing.PatchMatch
             return nnf2x;
         }
 
-        public static Nnf ScaleNnf2X(Nnf nnf, ZsImage scaledDestImage, ZsImage scaledSrcImage, IParallelOptions options, Area2DMap scaledMap)
+        public static Nnf ScaleNnf2X(Nnf nnf, ZsImage scaledDestImage, ZsImage scaledSrcImage, ParallelOptions options, Area2DMap scaledMap)
         {
             var destImageWidth = scaledDestImage.Width;
             var srcImageWidth = scaledSrcImage.Width;
@@ -225,7 +225,7 @@ namespace Zavolokas.ImageProcessing.PatchMatch
         }
 
         // TODO: (nnfs are should be for the same images)
-        public static unsafe Nnf MergeNnfs(this Nnf[] nnfs, Area2DMap[] maps, IParallelOptions options)
+        public static unsafe Nnf MergeNnfs(this Nnf[] nnfs, Area2DMap[] maps, ParallelOptions options)
         {
             if (nnfs == null || nnfs.Length < 1) throw new ArgumentException("At least one nnf is expected");
             if (nnfs.Length != maps.Length) throw new ArgumentException("Amount of passed Maps should be equal to amount of passed Nnfs");
