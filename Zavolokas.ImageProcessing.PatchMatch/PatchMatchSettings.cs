@@ -45,10 +45,6 @@ namespace Zavolokas.ImageProcessing.PatchMatch
         /// </summary>
         public byte MarkupIterationsAmount = 5;
 
-        public double StablePixelsProcent = 1;
-        public int MaxAllowedTuIterations = int.MaxValue;
-        public bool RestrictTuIterations = false;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="PatchMatchSettings"/> class.
         /// </summary>
@@ -75,10 +71,6 @@ namespace Zavolokas.ImageProcessing.PatchMatch
                 ThreadsCount = ThreadsCount,
                 NotDividableMinAmountElements = NotDividableMinAmountElements,
                 MarkupIterationsAmount = MarkupIterationsAmount,
-
-                MaxAllowedTuIterations = MaxAllowedTuIterations,
-                RestrictTuIterations = RestrictTuIterations,
-                StablePixelsProcent = StablePixelsProcent,
             };
         }
     }
