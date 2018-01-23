@@ -59,6 +59,7 @@
     <Compile Include="IPatchMatchNnfBuilder.cs" />
     <Compile Include="MappedAreasInfo.cs" />
     <Compile Include="NeighboursCheckDirection.cs" />
+    <Compile Include="NnfExtensions.cs" />
     <Compile Include="PatchMatchNnfBuilder.cs" />
     <Compile Include="NnfUtils.cs" />
     <Compile Include="PatchMatchSettings.cs" />
