@@ -8,48 +8,6 @@ namespace Zavolokas.ImageProcessing.PatchMatch
 {
     public static class NnfUtils
     {
-        public static void NormalizeNnf(Nnf nnf, Area2D destArea)
-        {
-            var nnfdata = nnf.GetNnfItems();
-
-            checked
-            {
-                var distances = new double[destArea.ElementsCount];
-                var pointIndexes = new int[destArea.ElementsCount];
-                destArea.FillMappedPointsIndexes(pointIndexes, nnf.DstWidth);
-
-                var dinstancesSum = 0.0;
-                for (int destPointIndex = 0; destPointIndex < distances.Length; destPointIndex++)
-                {
-                    var nnfPos = pointIndexes[destPointIndex] * 2;
-                    double distance = nnfdata[nnfPos + 1];
-                    distances[destPointIndex] = distance;
-                    dinstancesSum += distance;
-                }
-                double mean = dinstancesSum / distances.Length;
-
-                var squareDistances = new double[distances.Length];
-                double squreDistancesSum = 0.0;
-                for (int i = 0; i < distances.Length; i++)
-                {
-                    var distToMean = distances[i] - mean;
-                    double distToMeanCube = distToMean * distToMean;
-                    squareDistances[i] = distToMeanCube;
-                    squreDistancesSum += distToMeanCube;
-                }
-                double sigma = System.Math.Sqrt(squreDistancesSum / (squareDistances.Length - 1));
-
-                for (int destPointIndex = 0; destPointIndex < distances.Length; destPointIndex++)
-                {
-                    var nnfPos = pointIndexes[destPointIndex] * 2;
-                    var dist = distances[destPointIndex];
-                    dist = (dist - mean) / sigma;
-                    if (dist < 0) dist = -dist;
-                    nnfdata[nnfPos + 1] = dist;
-                }
-            }
-        }
-
         public static unsafe Nnf ScaleNnf2X(Nnf nnf, Area2DMap scaledMap, ZsImage scaledDestImage, ZsImage scaledSrcImage, Area2D destPixelsArea, ImagePatchDistanceCalculator patchDistanceCalculator, IParallelOptions options)
         {
             var patchSize = nnf.PatchSize;
