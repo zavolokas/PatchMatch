@@ -3,7 +3,7 @@
 namespace Zavolokas.ImageProcessing.PatchMatch
 {
 
-    public sealed class PatchMatchSettings : IParallelOptions, ICloneable
+    public sealed class PatchMatchSettings : ParallelOptions, ICloneable
     {
         public byte PatchSize = 11;
         public byte IterationsAmount = 5;
@@ -21,12 +21,10 @@ namespace Zavolokas.ImageProcessing.PatchMatch
         public int TileWidth = 128;
         public int TileHeight = 128;
 
-        public int NotDividableMinAmountElements { get; set; } = 80;
-        public byte ThreadsCount { get; set; }
-
         public PatchMatchSettings()
         {
             ThreadsCount = (byte)Environment.ProcessorCount;
+            NotDividableMinAmountElements = 80;
         }
 
         public object Clone()
