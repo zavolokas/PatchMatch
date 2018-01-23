@@ -16,11 +16,6 @@ namespace Zavolokas.ImageProcessing.PatchMatch
         public int MaxAllowedTuIterations = int.MaxValue;
         public bool RestrictTuIterations = false;
 
-        //todo: remove these settings
-        public byte ProgressEventFrequency = 10;
-        public int TileWidth = 128;
-        public int TileHeight = 128;
-
         public PatchMatchSettings()
         {
             ThreadsCount = (byte)Environment.ProcessorCount;
@@ -29,7 +24,7 @@ namespace Zavolokas.ImageProcessing.PatchMatch
 
         public object Clone()
         {
-            return new PatchMatchSettings()
+            return new PatchMatchSettings
             {
                 PatchSize = PatchSize,
                 IterationsAmount = IterationsAmount,
@@ -43,12 +38,7 @@ namespace Zavolokas.ImageProcessing.PatchMatch
                 MarkupIterationsAmount = MarkupIterationsAmount,
                 MaxAllowedTuIterations = MaxAllowedTuIterations,
                 RestrictTuIterations = RestrictTuIterations,
-
-                ProgressEventFrequency = ProgressEventFrequency,
-                TileWidth = TileWidth,
-                TileHeight = TileHeight
             };
-
         }
     }
 }
