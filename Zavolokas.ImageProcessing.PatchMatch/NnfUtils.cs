@@ -8,7 +8,7 @@ namespace Zavolokas.ImageProcessing.PatchMatch
 {
     public static class NnfUtils
     {
-        public static unsafe Nnf ScaleNnf2X(Nnf nnf, Area2DMap scaledMap, ZsImage scaledDestImage, ZsImage scaledSrcImage, Area2D destPixelsArea, ImagePatchDistanceCalculator patchDistanceCalculator, IParallelOptions options)
+        public static unsafe Nnf ScaleNnf2X(Nnf nnf, ZsImage scaledDestImage, ZsImage scaledSrcImage, IParallelOptions options, Area2DMap scaledMap, ImagePatchDistanceCalculator patchDistanceCalculator, Area2D destPixelsArea)
         {
             var patchSize = nnf.PatchSize;
             var patchLength = patchSize * patchSize;
@@ -125,7 +125,7 @@ namespace Zavolokas.ImageProcessing.PatchMatch
             return nnf2x;
         }
 
-        public static Nnf ScaleNnf2X(Nnf nnf, Area2DMap scaledMap, ZsImage scaledDestImage, ZsImage scaledSrcImage, IParallelOptions options)
+        public static Nnf ScaleNnf2X(Nnf nnf, ZsImage scaledDestImage, ZsImage scaledSrcImage, IParallelOptions options, Area2DMap scaledMap)
         {
             var destImageWidth = scaledDestImage.Width;
             var srcImageWidth = scaledSrcImage.Width;
