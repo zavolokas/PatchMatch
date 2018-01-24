@@ -11,7 +11,7 @@ namespace Zavolokas.ImageProcessing.PatchMatch
         /// <param name="imageWidth">Width of the image.</param>
         /// <param name="forward">if set to <c>true</c> [forward].</param>
         /// <returns></returns>
-        public static int[] GetAreaPointsIndexes(this Area2D area, int imageWidth, bool forward = true)
+        public static int[] GetPointsIndexes(this Area2D area, int imageWidth, bool forward = true)
         {
             int[] dstPointIndexes = new int[area.ElementsCount];
             area.FillMappedPointsIndexes(dstPointIndexes, imageWidth, forward);
