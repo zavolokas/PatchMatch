@@ -86,7 +86,7 @@ namespace ScaleUpNnf
             Nnf scaledNnf = null;
 
             // The scaling of the NNF from the small images to the bigger ones.
-            scaledNnf = NnfUtils.CloneAndScaleNnf2X(nnf, destImage, srcImage, settings, nextLevelMap, calculator, destImagePixelsArea);
+            scaledNnf = nnf.CloneAndScale2XWithUpdate(destImage, srcImage, settings, nextLevelMap, calculator, destImagePixelsArea);
 
             // Prepare results, save and show them
             scaledNnf

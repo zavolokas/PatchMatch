@@ -8,8 +8,10 @@ namespace Zavolokas.ImageProcessing.PatchMatch
 {
     public static class NnfUtils
     {
-        public static unsafe Nnf CloneAndScaleNnf2X(Nnf nnf, ZsImage scaledDestImage, ZsImage scaledSrcImage, ParallelOptions options, Area2DMap scaledMap, ImagePatchDistanceCalculator patchDistanceCalculator, Area2D destPixelsArea)
+        public static unsafe Nnf CloneAndScale2XWithUpdate(this Nnf nnf, ZsImage scaledDestImage, ZsImage scaledSrcImage, ParallelOptions options, Area2DMap scaledMap, ImagePatchDistanceCalculator patchDistanceCalculator, Area2D destPixelsArea)
         {
+            //if (nnf ===)
+
             var patchSize = nnf.PatchSize;
             var patchLength = patchSize * patchSize;
             var destImageWidth = scaledDestImage.Width;
