@@ -121,9 +121,9 @@ namespace Zavolokas.ImageProcessing.PatchMatch
             var partSize = (int)(areasMapping.DestElementsCount / partsCount);
 
             var pixelsArea = (areasMapping as IAreasMapping).DestArea;
-            var destPointsIndexes = pixelsArea.GetAreaPointsIndexes(destImageWidth);
+            var destPointsIndexes = pixelsArea.GetPointsIndexes(destImageWidth);
             pixelsArea = pixelsArea.Intersect(destPixelsArea);
-            var destAvailablePixelsIndexes = pixelsArea.GetAreaPointsIndexes(destImageWidth);
+            var destAvailablePixelsIndexes = pixelsArea.GetPointsIndexes(destImageWidth);
             var mappings = areasMapping.ExtractMappedAreasInfo(destImageWidth, srcImageWidth);
 
             //for (int partIndex = 0; partIndex < partsCount; partIndex++)
@@ -346,9 +346,9 @@ namespace Zavolokas.ImageProcessing.PatchMatch
             var partSize = areasMapping.DestElementsCount / partsCount;
 
             var pixelsArea = (areasMapping as IAreasMapping).DestArea;
-            var destPointIndexes = pixelsArea.GetAreaPointsIndexes(destImageWidth, direction == NeighboursCheckDirection.Forward);
+            var destPointIndexes = pixelsArea.GetPointsIndexes(destImageWidth, direction == NeighboursCheckDirection.Forward);
             pixelsArea = pixelsArea.Intersect(destPixelsArea);
-            var destAvailablePixelsIndexes = pixelsArea.GetAreaPointsIndexes(destImageWidth, direction == NeighboursCheckDirection.Forward);
+            var destAvailablePixelsIndexes = pixelsArea.GetPointsIndexes(destImageWidth, direction == NeighboursCheckDirection.Forward);
 
             var mappings = areasMapping.ExtractMappedAreasInfo(destImageWidth, srcImageWidth, direction == NeighboursCheckDirection.Forward);
 
