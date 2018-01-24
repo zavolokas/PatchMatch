@@ -24,17 +24,15 @@ namespace Zavolokas.ImageProcessing.Parallel.PatchMatch
                 var nnfs = inputs.Select(i => i.Nnf).ToArray();
                 var maps = inputs.Select(i => i.Map).ToArray();
 
-                mergedData.Nnf = NnfUtils.MergeNnfs(nnfs, maps, inputs[0].Settings);
+                for (int i = 1; i < nnfs.Length-1; i++)
+                {
+                    mergedData.Nnf.Merge(nnfs[i], mergedData.Map, maps[i], inputs[0].Settings );
 
-                mergedData.Map = maps
-                    .Skip(1)
-                    .Aggregate(maps[0], (a, b) =>
-                        {
-                            return new Area2DMapBuilder()
-                                .InitNewMap(a)
-                                .AddMapping(b)
-                                .Build();
-                        });
+                    mergedData.Map = new Area2DMapBuilder()
+                        .InitNewMap(mergedData.Map)
+                        .AddMapping(maps[i])
+                        .Build();
+                }
 
                 return new[] { mergedData };
             }

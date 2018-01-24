@@ -393,6 +393,122 @@ namespace Zavolokas.ImageProcessing.PatchMatch
             return nnf2x;
         }
 
+        /// <summary>
+        /// Merges provided NNF into.
+        /// </summary>
+        /// <param name="destNnf">The dest NNF.</param>
+        /// <param name="srcNnf">The source NNF.</param>
+        /// <param name="destNnfMap">The dest NNF areas mapping(by default whole source area is mapped to the dest area).</param>
+        /// <param name="srcNnfMap">The source NNF areas mapping(by default whole source area is mapped to the dest area).</param>
+        /// <param name="options">The parallel processing options.</param>
+        /// <exception cref="ArgumentNullException">
+        /// destNnf
+        /// or
+        /// srcNnf
+        /// </exception>
+        /// <exception cref="ArgumentException">NNFs should be built for the same source and dest images</exception>
+        public static unsafe void Merge(this Nnf destNnf, Nnf srcNnf, Area2DMap destNnfMap = null, Area2DMap srcNnfMap = null, ParallelOptions options = null)
+        {
+            if (destNnf == null) throw new ArgumentNullException(nameof(destNnf));
+            if (srcNnf == null) throw new ArgumentNullException(nameof(srcNnf));
+
+            // We assume that all the inputs contain NNFs 
+            // for the same dest image.
+            // The source images can not be different as well.
+            // When different source images are desired those
+            // images should be merged to one image and mappings 
+            // should be adjusted to map to a particular region 
+            // on the source image.
+            // Differen source images problem. In that case we 
+            // have a problem with different mappings when we 
+            // merge NNfs. Mappings can not be merged as they 
+            // would have totally different source areas.
+
+            // make sure that both NNFs are built for the same dest and source images
+            if (destNnf.DstWidth != srcNnf.DstWidth || destNnf.DstHeight != srcNnf.DstHeight
+                || destNnf.SourceWidth != srcNnf.SourceWidth || destNnf.SourceHeight != srcNnf.SourceHeight)
+                throw new ArgumentException("NNFs should be built for the same source and dest images");
+
+            // NNFs are built for particular areas that are defined in the corresponding mapping.
+            // When mappings are not provided, we assume NNF was built for the whole areas of the
+            // dest and source images.
+            if (destNnfMap == null) destNnfMap = CreateMapping(destNnf);
+            if (srcNnfMap == null) srcNnfMap = CreateMapping(srcNnf);
+
+            if (options == null) options = new ParallelOptions();
+
+            const bool forward = true;
+            var destImageWidth = destNnf.DstWidth;
+            var srcImageWidth = destNnf.SourceWidth;
+
+            // Nnf that needs to be merged to our dest nnf.
+            var srcNnfData = srcNnf.GetNnfItems();
+            var destNnfData = destNnf.GetNnfItems();
+
+            var destNnfPointsIndexes = GetAreaPointsIndexes((destNnfMap as IAreasMapping).DestArea, destImageWidth, forward);
+            var srcNnfPointsIndexes = GetAreaPointsIndexes((srcNnfMap as IAreasMapping).DestArea, destImageWidth, forward);
+            var mappings = ExtractMappedAreasInfo(srcNnfMap, destImageWidth, srcImageWidth, forward);
+
+            // Decide on how many partitions we should divade the processing
+            // of the elements.
+            int partsCount = srcNnfMap.DestElementsCount > options.NotDividableMinAmountElements
+                ? options.ThreadsCount
+                : 1;
+            var partSize = (int)(srcNnfMap.DestElementsCount / partsCount);
+
+            Parallel.For(0, partsCount, partIndex =>
+            {
+                // Colne mapping to avoid conflicts in multithread
+                var destNnfPointsIndexesSet = new HashSet<int>(destNnfPointsIndexes);
+
+                // Clone mappings to avoid problems in multithread
+                var mappedAreasInfos = new MappedAreasInfo[mappings.Length];
+                for (int j = 0; j < mappings.Length; j++)
+                {
+                    mappedAreasInfos[j] = mappings[j].Clone();
+                }
+
+                var firstPointIndex = partIndex * partSize;
+                var lastPointIndex = firstPointIndex + partSize - 1;
+                if (partIndex == partsCount - 1) lastPointIndex = srcNnfMap.DestElementsCount - 1;
+                if (lastPointIndex > srcNnfMap.DestElementsCount) lastPointIndex = srcNnfMap.DestElementsCount - 1;
+
+                fixed (double* destNnfP = destNnfData)
+                fixed (double* srcNnfP = srcNnfData)
+                fixed (int* srcNnfPointIndexesP = srcNnfPointsIndexes)
+                {
+                    for (var srcNnfMapDestPointIndex = firstPointIndex; srcNnfMapDestPointIndex <= lastPointIndex; srcNnfMapDestPointIndex++)
+                    {
+                        var destPointIndex = *(srcNnfPointIndexesP + srcNnfMapDestPointIndex);
+
+                        if (destNnfPointsIndexesSet.Contains(destPointIndex))
+                        {
+                            // The value of the NNF in the dest point can
+                            // present in the resulting destNnf as well. 
+                            // In that case we need to merge NNFs at the point
+                            // by taking the best value.
+
+                            // compare and set the best
+                            var srcVal = *(srcNnfP + destPointIndex * 2 + 1);
+                            var destVal = *(destNnfP + destPointIndex * 2 + 1);
+
+                            if (srcVal < destVal)
+                            {
+                                *(destNnfP + destPointIndex * 2 + 0) = *(srcNnfP + destPointIndex * 2 + 0);
+                                *(destNnfP + destPointIndex * 2 + 1) = srcVal;
+                            }
+                        }
+                        else
+                        {
+                            // When the destNnf doesn't contain the value
+                            // for that point we simply copy it
+                            *(destNnfP + destPointIndex * 2 + 0) = *(srcNnfP + destPointIndex * 2 + 0);
+                            *(destNnfP + destPointIndex * 2 + 1) = *(srcNnfP + destPointIndex * 2 + 1);
+                        }
+                    }
+                }
+            });
+        }
 
         private static MappedAreasInfo[] ExtractMappedAreasInfo(IAreasMapping map, int destImageWidth, int srcImageWidth, bool forward)
         {
@@ -463,6 +579,16 @@ namespace Zavolokas.ImageProcessing.PatchMatch
                     fits = false;
                 }
             }
+        }
+
+        private static Area2DMap CreateMapping(Nnf nnf)
+        {
+            var dest = Area2D.Create(0, 0, nnf.DstWidth, nnf.DstHeight);
+            var src = Area2D.Create(0, 0, nnf.SourceWidth, nnf.SourceHeight);
+
+            return new Area2DMapBuilder()
+                .InitNewMap(dest, src)
+                .Build();
         }
     }
 }
