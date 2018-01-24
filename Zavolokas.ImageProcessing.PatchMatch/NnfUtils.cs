@@ -10,7 +10,15 @@ namespace Zavolokas.ImageProcessing.PatchMatch
     {
         public static unsafe Nnf CloneAndScale2XWithUpdate(this Nnf nnf, ZsImage scaledDestImage, ZsImage scaledSrcImage, ParallelOptions options, Area2DMap scaledMap, ImagePatchDistanceCalculator patchDistanceCalculator, Area2D destPixelsArea)
         {
-            //if (nnf ===)
+            if (nnf == null) throw new ArgumentNullException(nameof(nnf));
+            if (scaledDestImage == null) throw new ArgumentNullException(nameof(scaledDestImage));
+            if (scaledSrcImage == null) throw new ArgumentNullException(nameof(scaledSrcImage));
+            if (scaledMap == null) throw new ArgumentNullException(nameof(scaledMap));
+
+            if (destPixelsArea == null)
+                destPixelsArea = Area2D.Create(0,0,scaledDestImage.Width, scaledDestImage.Height);
+
+            if (options == null) options = new ParallelOptions();
 
             var patchSize = nnf.PatchSize;
             var patchLength = patchSize * patchSize;
