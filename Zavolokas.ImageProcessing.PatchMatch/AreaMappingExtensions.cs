@@ -5,7 +5,7 @@ namespace Zavolokas.ImageProcessing.PatchMatch
 {
     internal static class AreaMappingExtensions
     {
-        internal static MappedAreasInfo[] ExtractMappedAreasInfo(this IAreasMapping map, int destImageWidth, int srcImageWidth, bool forward)
+        internal static MappedAreasInfo[] ExtractMappedAreasInfo(this IAreasMapping map, int destImageWidth, int srcImageWidth, bool forward = true)
         {
             var areaAssociations = map.AssociatedAreasAsc.Reverse().ToArray();
             var mapping = new MappedAreasInfo[areaAssociations.Length];

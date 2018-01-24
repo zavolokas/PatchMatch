@@ -156,7 +156,7 @@ namespace Zavolokas.ImageProcessing.PatchMatch
             var pixelsArea = (scaledMap as IAreasMapping).DestArea;
             //var destPointIndexes = GetDestPointsIndexes(pixelsArea, destImageWidth, NeighboursCheckDirection.Forward);
             pixelsArea = pixelsArea.Intersect(destPixelsArea);
-            var destAvailablePixelsIndexes = GetAreaPointsIndexes(pixelsArea, destImageWidth, true);
+            var destAvailablePixelsIndexes = pixelsArea.GetAreaPointsIndexes(destImageWidth);
             var mappings = scaledMap.ExtractMappedAreasInfo(destImageWidth, srcImageWidth, true);
 
             var nnf2x = new Nnf(nnf.DstWidth * 2, nnf.DstHeight * 2, nnf.SourceWidth * 2, nnf.SourceHeight * 2, nnf.PatchSize);
@@ -437,7 +437,6 @@ namespace Zavolokas.ImageProcessing.PatchMatch
 
             if (options == null) options = new ParallelOptions();
 
-            const bool forward = true;
             var destImageWidth = destNnf.DstWidth;
             var srcImageWidth = destNnf.SourceWidth;
 
@@ -445,9 +444,9 @@ namespace Zavolokas.ImageProcessing.PatchMatch
             var srcNnfData = srcNnf.GetNnfItems();
             var destNnfData = destNnf.GetNnfItems();
 
-            var destNnfPointsIndexes = GetAreaPointsIndexes((destNnfMap as IAreasMapping).DestArea, destImageWidth, forward);
-            var srcNnfPointsIndexes = GetAreaPointsIndexes((srcNnfMap as IAreasMapping).DestArea, destImageWidth, forward);
-            var mappings = srcNnfMap.ExtractMappedAreasInfo(destImageWidth, srcImageWidth, forward);
+            var destNnfPointsIndexes = (destNnfMap as IAreasMapping).DestArea.GetAreaPointsIndexes(destImageWidth);
+            var srcNnfPointsIndexes = (srcNnfMap as IAreasMapping).DestArea.GetAreaPointsIndexes(destImageWidth);
+            var mappings = srcNnfMap.ExtractMappedAreasInfo(destImageWidth, srcImageWidth);
 
             // Decide on how many partitions we should divade the processing
             // of the elements.
@@ -508,13 +507,6 @@ namespace Zavolokas.ImageProcessing.PatchMatch
                     }
                 }
             });
-        }
-
-        private static int[] GetAreaPointsIndexes(Area2D area, int destImageWidth, bool forward)
-        {
-            int[] dstPointIndexes = new int[area.ElementsCount];
-            area.FillMappedPointsIndexes(dstPointIndexes, destImageWidth, forward);
-            return dstPointIndexes;
         }
 
         /// <summary>

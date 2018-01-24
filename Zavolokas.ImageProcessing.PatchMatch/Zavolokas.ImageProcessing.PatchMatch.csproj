@@ -51,6 +51,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Area2DExtensions.cs" />
     <Compile Include="AreaMappingExtensions.cs" />
     <Compile Include="Cie2000ImagePatchDistanceCalculator.cs" />
     <Compile Include="Cie76ImagePatchDistanceCalculator.cs" />
