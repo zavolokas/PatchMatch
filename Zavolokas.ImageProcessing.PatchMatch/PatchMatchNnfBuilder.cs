@@ -68,7 +68,7 @@ namespace Zavolokas.ImageProcessing.PatchMatch
         {
             if (destImage == null) throw new ArgumentNullException(nameof(destImage));
 
-            var destPixelsArea = Area2D.Create(0,0,destImage.Width, destImage.Height);
+            var destPixelsArea = Area2D.Create(0, 0, destImage.Width, destImage.Height);
             RunRandomNnfInitIteration(nnf, destImage, srcImage, settings, patchDistanceCalculator, areasMapping, destPixelsArea);
         }
 
@@ -121,10 +121,10 @@ namespace Zavolokas.ImageProcessing.PatchMatch
             var partSize = (int)(areasMapping.DestElementsCount / partsCount);
 
             var pixelsArea = (areasMapping as IAreasMapping).DestArea;
-            var destPointsIndexes = GetAreaPointsIndexes(pixelsArea, destImageWidth, NeighboursCheckDirection.Forward);
+            var destPointsIndexes = pixelsArea.GetAreaPointsIndexes(destImageWidth);
             pixelsArea = pixelsArea.Intersect(destPixelsArea);
-            var destAvailablePixelsIndexes = GetAreaPointsIndexes(pixelsArea, destImageWidth, NeighboursCheckDirection.Forward);
-            var mappings = ExtractMappedAreasInfo(areasMapping, destImageWidth, srcImageWidth, NeighboursCheckDirection.Forward);
+            var destAvailablePixelsIndexes = pixelsArea.GetAreaPointsIndexes(destImageWidth);
+            var mappings = areasMapping.ExtractMappedAreasInfo(destImageWidth, srcImageWidth);
 
             //for (int partIndex = 0; partIndex < partsCount; partIndex++)
             Parallel.For(0, partsCount, partIndex =>
@@ -346,11 +346,11 @@ namespace Zavolokas.ImageProcessing.PatchMatch
             var partSize = areasMapping.DestElementsCount / partsCount;
 
             var pixelsArea = (areasMapping as IAreasMapping).DestArea;
-            var destPointIndexes = GetAreaPointsIndexes(pixelsArea, destImageWidth, direction);
+            var destPointIndexes = pixelsArea.GetAreaPointsIndexes(destImageWidth, direction == NeighboursCheckDirection.Forward);
             pixelsArea = pixelsArea.Intersect(destPixelsArea);
-            var destAvailablePixelsIndexes = GetAreaPointsIndexes(pixelsArea, destImageWidth, direction);
+            var destAvailablePixelsIndexes = pixelsArea.GetAreaPointsIndexes(destImageWidth, direction == NeighboursCheckDirection.Forward);
 
-            var mappings = ExtractMappedAreasInfo(areasMapping, destImageWidth, srcImageWidth, direction);
+            var mappings = areasMapping.ExtractMappedAreasInfo(destImageWidth, srcImageWidth, direction == NeighboursCheckDirection.Forward);
 
             //for (int partIndex = 0; partIndex < partsCount; partIndex++)
             Parallel.For(0, partsCount, partIndex =>
@@ -536,39 +536,6 @@ namespace Zavolokas.ImageProcessing.PatchMatch
                     }
                 }
             });
-        }
-
-        // TODO: extract to a class with extensions
-        private static int[] GetAreaPointsIndexes(Area2D area, int imageWidth, NeighboursCheckDirection indexesDirection)
-        {
-            int[] pointsIndexes = new int[area.ElementsCount];
-            area.FillMappedPointsIndexes(pointsIndexes, imageWidth, indexesDirection != NeighboursCheckDirection.Forward);
-            return pointsIndexes;
-        }
-
-        // TODO: extension? 
-        private static MappedAreasInfo[] ExtractMappedAreasInfo(IAreasMapping map, int destImageWidth, int srcImageWidth, NeighboursCheckDirection direction)
-        {
-            var areaAssociations = map.AssociatedAreasAsc.Reverse().ToArray();
-            var mapping = new MappedAreasInfo[areaAssociations.Length];
-            for (int i = 0; i < areaAssociations.Length; i++)
-            {
-                var areaAssociation = areaAssociations[i];
-                var ass = new MappedAreasInfo
-                {
-                    DestAreaPointsIndexes = new int[areaAssociation.Item1.ElementsCount],
-                    SrcAreaPointsIndexes = new int[areaAssociation.Item2.ElementsCount],
-                    SrcBound = areaAssociation.Item2.Bound
-                };
-
-                areaAssociation.Item1.FillMappedPointsIndexes(ass.DestAreaPointsIndexes, destImageWidth,
-                    direction != NeighboursCheckDirection.Forward);
-                areaAssociation.Item2.FillMappedPointsIndexes(ass.SrcAreaPointsIndexes, srcImageWidth,
-                    direction != NeighboursCheckDirection.Forward);
-
-                mapping[i] = ass;
-            }
-            return mapping;
         }
 
         /// <summary>
