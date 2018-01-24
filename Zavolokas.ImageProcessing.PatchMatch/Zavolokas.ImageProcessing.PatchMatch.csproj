@@ -61,7 +61,6 @@
     <Compile Include="NeighboursCheckDirection.cs" />
     <Compile Include="NnfExtensions.cs" />
     <Compile Include="PatchMatchNnfBuilder.cs" />
-    <Compile Include="NnfUtils.cs" />
     <Compile Include="PatchMatchSettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
