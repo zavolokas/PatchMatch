@@ -262,6 +262,136 @@ namespace Zavolokas.ImageProcessing.PatchMatch
             return nnf2x;
         }
 
+        /// <summary>
+        /// Clones the NNF and scales it up 2 times without distances recalculation.
+        /// </summary>
+        /// <param name="nnf">The NNF.</param>
+        /// <param name="scaledDestImage">The scaled dest image.</param>
+        /// <param name="scaledSrcImage">The scaled source image.</param>
+        /// <param name="options">The options for parallel processing.</param>
+        /// <param name="scaledMap">The areas mapping. By default whole area of the dest image is associated with the whole area of the source image.</param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException">
+        /// nnf
+        /// or
+        /// scaledDestImage
+        /// or
+        /// scaledSrcImage
+        /// </exception>
+        public static Nnf CloneAndScaleNnf2X(this Nnf nnf, ZsImage scaledDestImage, ZsImage scaledSrcImage, ParallelOptions options = null, Area2DMap scaledMap = null)
+        {
+            if (nnf == null) throw new ArgumentNullException(nameof(nnf));
+            if (scaledDestImage == null) throw new ArgumentNullException(nameof(scaledDestImage));
+            if (scaledSrcImage == null) throw new ArgumentNullException(nameof(scaledSrcImage));
+
+            if (scaledMap == null)
+            {
+                var destArea = Area2D.Create(0, 0, scaledDestImage.Width, scaledDestImage.Height);
+                var srcArea = Area2D.Create(0, 0, scaledSrcImage.Width, scaledSrcImage.Height);
+
+                scaledMap = new Area2DMapBuilder()
+                    .InitNewMap(destArea, srcArea)
+                    .Build();
+            }
+
+            if (options == null) options = new ParallelOptions();
+
+            var destImageWidth = scaledDestImage.Width;
+            var srcImageWidth = scaledSrcImage.Width;
+            var sameSrcAndDest = scaledDestImage == scaledSrcImage;
+
+            var mappings = ExtractMappedAreasInfo(scaledMap, destImageWidth, srcImageWidth, true);
+
+            var nnf2x = new Nnf(nnf.DstWidth * 2, nnf.DstHeight * 2, nnf.SourceWidth * 2, nnf.SourceHeight * 2, nnf.PatchSize);
+
+            var nnfDestWidth = nnf.DstWidth;
+            var nnfSourceWidth = nnf.SourceWidth;
+            var nnf2xSourceWidth = nnf2x.SourceWidth;
+            var nnf2xDstWidth = nnf2x.DstWidth;
+
+            var nnfData = nnf.GetNnfItems();
+            var nnf2xData = nnf2x.GetNnfItems();
+
+            // Decide on how many partitions we should divade the processing
+            // of the elements.
+            int nnfPointsAmount = nnf.DstWidth * nnf.DstHeight;
+            var partsCount = nnfPointsAmount > options.NotDividableMinAmountElements
+                ? options.ThreadsCount
+                : 1;
+            var partSize = nnfPointsAmount / partsCount;
+
+            var offs = new[]
+            {
+                new[] { 0, 0 },
+                new[] { 1, 0 },
+                new[] { 0, 1 },
+                new[] { 1, 1 }
+            };
+
+            Parallel.For(0, partsCount, partIndex =>
+                    //for (int partIndex = 0; partIndex < partsCount; partIndex++)
+                {
+                    bool isPatchFit = false;
+
+                    var mappedAreasInfos = new MappedAreasInfo[mappings.Length];
+                    for (var i = 0; i < mappings.Length; i++)
+                    {
+                        mappedAreasInfos[i] = mappings[i].Clone();
+                    }
+
+                    var firstPointIndex = partIndex * partSize;
+                    var lastPointIndex = firstPointIndex + partSize - 1;
+                    if (partIndex == partsCount - 1) lastPointIndex = nnfPointsAmount - 1;
+                    if (lastPointIndex > nnfPointsAmount) lastPointIndex = nnfPointsAmount - 1;
+
+                    MappedAreasInfo mappedAreasInfo = null;
+
+                    for (var j = firstPointIndex; j <= lastPointIndex; j++)
+                    {
+                        var destPx = j;
+                        var destX = destPx % nnfDestWidth;
+                        var destY = destPx / nnfDestWidth;
+
+                        // Find 
+                        var srcPointIndex = nnfData[destY * nnfDestWidth * 2 + destX * 2]; // / 2;
+                        int srcY = (int)(srcPointIndex / nnfSourceWidth); // * 2;
+                        int srcX = (int)(srcPointIndex % nnfSourceWidth); // * 2;
+
+                        var dist = nnfData[destY * nnfDestWidth * 2 + destX * 2 + 1];
+
+                        var nY = destY * 2;
+                        var nX = destX * 2;
+
+                        for (int i = 0; i < offs.Length; i++)
+                        {
+                            var destPointIndex = (nY + offs[i][1]) * nnf2xDstWidth + nX + offs[i][0];
+                            mappedAreasInfo = mappedAreasInfos.FirstOrDefault(mai => mai.DestAreaPointsIndexesSet.Contains(destPointIndex));
+                            if (mappedAreasInfo != null)
+                            {
+                                nnf2xData[destPointIndex * 2] = ((srcY + offs[i][1]) * nnf2xSourceWidth + (srcX + offs[i][0])) * 2;
+                                nnf2xData[destPointIndex * 2 + 1] = dist;
+                            }
+                            else
+                            {
+                                if (sameSrcAndDest)
+                                {
+                                    // when the source and the dest image is the same one, the best
+                                    // corresponding patch is the patch itself!
+                                    nnf2xData[destPointIndex * 2] = destPointIndex;
+                                    nnf2xData[destPointIndex * 2 + 1] = 0;
+                                }
+                                else
+                                {
+                                    nnf2xData[destPointIndex * 2] = ((srcY + offs[i][1]) * nnf2xSourceWidth + (srcX + offs[i][0])) * 2;
+                                    nnf2xData[destPointIndex * 2 + 1] = nnfData[destY * nnfDestWidth * 2 + destX * 2 + 1];
+                                }
+                            }
+                        }
+                    }
+                }
+            );
+            return nnf2x;
+        }
 
 
         private static MappedAreasInfo[] ExtractMappedAreasInfo(IAreasMapping map, int destImageWidth, int srcImageWidth, bool forward)
