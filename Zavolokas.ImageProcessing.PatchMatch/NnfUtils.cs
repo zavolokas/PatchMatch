@@ -8,6 +8,23 @@ namespace Zavolokas.ImageProcessing.PatchMatch
 {
     public static class NnfUtils
     {
+        /// <summary>
+        /// Clones the NNF and scales it up 2 times with distances recalculation.
+        /// </summary>
+        /// <param name="nnf">The NNF.</param>
+        /// <param name="scaledDestImage">The scaled dest image.</param>
+        /// <param name="scaledSrcImage">The scaled source image.</param>
+        /// <param name="options">The options for parallel processing.</param>
+        /// <param name="patchDistanceCalculator">The calculator that calculates similarity of two patches. By deafult the Cie76 is used.</param>
+        /// <param name="destPixelsArea">Area on the dest image that actually containes pixels. By default is the area of the entire image.</param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException">
+        /// nnf
+        /// or
+        /// scaledDestImage
+        /// or
+        /// scaledSrcImage
+        /// </exception>
         public static Nnf CloneAndScale2XWithUpdate(this Nnf nnf, ZsImage scaledDestImage, ZsImage scaledSrcImage, ParallelOptions options = null, ImagePatchDistanceCalculator patchDistanceCalculator = null, Area2D destPixelsArea = null)
         {
             if (scaledDestImage == null) throw new ArgumentNullException(nameof(scaledDestImage));
@@ -23,6 +40,25 @@ namespace Zavolokas.ImageProcessing.PatchMatch
             return nnf.CloneAndScale2XWithUpdate(scaledDestImage, scaledSrcImage, options, scaledMap, patchDistanceCalculator,
                 destPixelsArea);
         }
+
+        /// <summary>
+        /// Clones the NNF and scales it up 2 times with distances recalculation.
+        /// </summary>
+        /// <param name="nnf">The NNF.</param>
+        /// <param name="scaledDestImage">The scaled dest image.</param>
+        /// <param name="scaledSrcImage">The scaled source image.</param>
+        /// <param name="options">The options for parallel processing.</param>
+        /// <param name="scaledMap">The areas mapping. By default whole area of the dest image is associated with the whole area of the source image.</param>
+        /// <param name="patchDistanceCalculator">The calculator that calculates similarity of two patches. By deafult the Cie76 is used.</param>
+        /// <param name="destPixelsArea">Area on the dest image that actually containes pixels. By default is the area of the entire image.</param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException">nnf
+        /// or
+        /// scaledDestImage
+        /// or
+        /// scaledSrcImage
+        /// or
+        /// scaledMap</exception>
         public static unsafe Nnf CloneAndScale2XWithUpdate(this Nnf nnf, ZsImage scaledDestImage, ZsImage scaledSrcImage, ParallelOptions options, Area2DMap scaledMap, ImagePatchDistanceCalculator patchDistanceCalculator = null, Area2D destPixelsArea = null)
         {
             if (nnf == null) throw new ArgumentNullException(nameof(nnf));
