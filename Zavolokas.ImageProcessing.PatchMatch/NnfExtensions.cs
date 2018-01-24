@@ -157,7 +157,7 @@ namespace Zavolokas.ImageProcessing.PatchMatch
             //var destPointIndexes = GetDestPointsIndexes(pixelsArea, destImageWidth, NeighboursCheckDirection.Forward);
             pixelsArea = pixelsArea.Intersect(destPixelsArea);
             var destAvailablePixelsIndexes = GetAreaPointsIndexes(pixelsArea, destImageWidth, true);
-            var mappings = ExtractMappedAreasInfo(scaledMap, destImageWidth, srcImageWidth, true);
+            var mappings = scaledMap.ExtractMappedAreasInfo(destImageWidth, srcImageWidth, true);
 
             var nnf2x = new Nnf(nnf.DstWidth * 2, nnf.DstHeight * 2, nnf.SourceWidth * 2, nnf.SourceHeight * 2, nnf.PatchSize);
 
@@ -300,7 +300,7 @@ namespace Zavolokas.ImageProcessing.PatchMatch
             var srcImageWidth = scaledSrcImage.Width;
             var sameSrcAndDest = scaledDestImage == scaledSrcImage;
 
-            var mappings = ExtractMappedAreasInfo(scaledMap, destImageWidth, srcImageWidth, true);
+            var mappings = scaledMap.ExtractMappedAreasInfo(destImageWidth, srcImageWidth, true);
 
             var nnf2x = new Nnf(nnf.DstWidth * 2, nnf.DstHeight * 2, nnf.SourceWidth * 2, nnf.SourceHeight * 2, nnf.PatchSize);
 
@@ -447,7 +447,7 @@ namespace Zavolokas.ImageProcessing.PatchMatch
 
             var destNnfPointsIndexes = GetAreaPointsIndexes((destNnfMap as IAreasMapping).DestArea, destImageWidth, forward);
             var srcNnfPointsIndexes = GetAreaPointsIndexes((srcNnfMap as IAreasMapping).DestArea, destImageWidth, forward);
-            var mappings = ExtractMappedAreasInfo(srcNnfMap, destImageWidth, srcImageWidth, forward);
+            var mappings = srcNnfMap.ExtractMappedAreasInfo(destImageWidth, srcImageWidth, forward);
 
             // Decide on how many partitions we should divade the processing
             // of the elements.
@@ -508,28 +508,6 @@ namespace Zavolokas.ImageProcessing.PatchMatch
                     }
                 }
             });
-        }
-
-        private static MappedAreasInfo[] ExtractMappedAreasInfo(IAreasMapping map, int destImageWidth, int srcImageWidth, bool forward)
-        {
-            var areaAssociations = map.AssociatedAreasAsc.Reverse().ToArray();
-            var mapping = new MappedAreasInfo[areaAssociations.Length];
-            for (int i = 0; i < areaAssociations.Length; i++)
-            {
-                var areaAssociation = areaAssociations[i];
-                var ass = new MappedAreasInfo
-                {
-                    DestAreaPointsIndexes = new int[areaAssociation.Item1.ElementsCount],
-                    SrcAreaPointsIndexes = new int[areaAssociation.Item2.ElementsCount],
-                    SrcBound = areaAssociation.Item2.Bound
-                };
-
-                areaAssociation.Item1.FillMappedPointsIndexes(ass.DestAreaPointsIndexes, destImageWidth, forward);
-                areaAssociation.Item2.FillMappedPointsIndexes(ass.SrcAreaPointsIndexes, srcImageWidth, forward);
-
-                mapping[i] = ass;
-            }
-            return mapping;
         }
 
         private static int[] GetAreaPointsIndexes(Area2D area, int destImageWidth, bool forward)
