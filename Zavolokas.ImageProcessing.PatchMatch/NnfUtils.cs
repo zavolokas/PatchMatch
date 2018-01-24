@@ -8,7 +8,22 @@ namespace Zavolokas.ImageProcessing.PatchMatch
 {
     public static class NnfUtils
     {
-        public static unsafe Nnf CloneAndScale2XWithUpdate(this Nnf nnf, ZsImage scaledDestImage, ZsImage scaledSrcImage, ParallelOptions options, Area2DMap scaledMap, ImagePatchDistanceCalculator patchDistanceCalculator, Area2D destPixelsArea)
+        public static Nnf CloneAndScale2XWithUpdate(this Nnf nnf, ZsImage scaledDestImage, ZsImage scaledSrcImage, ParallelOptions options = null, ImagePatchDistanceCalculator patchDistanceCalculator = null, Area2D destPixelsArea = null)
+        {
+            if (scaledDestImage == null) throw new ArgumentNullException(nameof(scaledDestImage));
+            if (scaledSrcImage == null) throw new ArgumentNullException(nameof(scaledSrcImage));
+
+            var destArea = Area2D.Create(0, 0, scaledDestImage.Width, scaledDestImage.Height);
+            var srcArea = Area2D.Create(0, 0, scaledSrcImage.Width, scaledSrcImage.Height);
+
+            Area2DMap scaledMap = new Area2DMapBuilder()
+                .InitNewMap(destArea, srcArea)
+                .Build();
+
+            return nnf.CloneAndScale2XWithUpdate(scaledDestImage, scaledSrcImage, options, scaledMap, patchDistanceCalculator,
+                destPixelsArea);
+        }
+        public static unsafe Nnf CloneAndScale2XWithUpdate(this Nnf nnf, ZsImage scaledDestImage, ZsImage scaledSrcImage, ParallelOptions options, Area2DMap scaledMap, ImagePatchDistanceCalculator patchDistanceCalculator = null, Area2D destPixelsArea = null)
         {
             if (nnf == null) throw new ArgumentNullException(nameof(nnf));
             if (scaledDestImage == null) throw new ArgumentNullException(nameof(scaledDestImage));
@@ -17,6 +32,9 @@ namespace Zavolokas.ImageProcessing.PatchMatch
 
             if (destPixelsArea == null)
                 destPixelsArea = Area2D.Create(0,0,scaledDestImage.Width, scaledDestImage.Height);
+
+            if (patchDistanceCalculator == null)
+                patchDistanceCalculator = ImagePatchDistance.Cie76;
 
             if (options == null) options = new ParallelOptions();
 
