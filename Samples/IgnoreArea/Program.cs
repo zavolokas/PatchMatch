@@ -38,9 +38,14 @@ namespace IgnoreArea
                 .SetIgnoredSourcedArea(ignoreArea)
                 .Build();
 
-            var input = new PmData(destImage, srcImage, map);
-            input.Settings.PatchSize = 5;
-            input.Settings.IterationsAmount = 2;
+            var input = new PmData(destImage, srcImage, map)
+            {
+                Settings =
+                {
+                    PatchSize = 5,
+                    IterationsAmount = 2
+                }
+            };
 
             var patchMatchNnfBuilder = new PatchMatchNnfBuilder();
 

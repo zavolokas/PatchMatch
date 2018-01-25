@@ -82,15 +82,11 @@ namespace MergeNnfs
             var mergePipeline = new MergeNnf();
             mergePipeline.SetInput(new[] {input1, input2});
 
-            nnf1 = mergePipeline.Process()
-                .Output[0]
-                .Nnf;
-
             nnf1
                 .RestoreImage(srcImage, 3, input2.Settings.PatchSize)
                 .FromLabToRgb()
                 .FromRgbToBitmap()
-                .SaveTo(@"..\..\restored_whole.png", ImageFormat.Png);
+                .SaveTo(@"..\..\restored1.png", ImageFormat.Png);
 
             nnf2
                 .RestoreImage(srcImage, 3, input2.Settings.PatchSize)
@@ -101,13 +97,28 @@ namespace MergeNnfs
             nnf1
                 .ToRgbImage()
                 .FromRgbToBitmap()
-                .SaveTo(@"..\..\nnf.png", ImageFormat.Png);
+                .SaveTo(@"..\..\nnf1.png", ImageFormat.Png);
 
             nnf2
                 .ToRgbImage()
                 .FromRgbToBitmap()
                 .SaveTo(@"..\..\nnf2.png", ImageFormat.Png)
                 .ShowFile();
+
+            nnf1 = mergePipeline.Process()
+                .Output[0]
+                .Nnf;
+
+            nnf1
+                .RestoreImage(srcImage, 3, input2.Settings.PatchSize)
+                .FromLabToRgb()
+                .FromRgbToBitmap()
+                .SaveTo(@"..\..\restored_whole.png", ImageFormat.Png);
+
+            nnf1
+                .ToRgbImage()
+                .FromRgbToBitmap()
+                .SaveTo(@"..\..\merged_nnf.png", ImageFormat.Png);
 
             Console.WriteLine($"PatchMatchPipeline processing is finished.");
         }
