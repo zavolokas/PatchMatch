@@ -51,17 +51,17 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Area2DExtensions.cs" />
-    <Compile Include="AreaMappingExtensions.cs" />
-    <Compile Include="Cie2000ImagePatchDistanceCalculator.cs" />
-    <Compile Include="Cie76ImagePatchDistanceCalculator.cs" />
-    <Compile Include="ImagePatchDistance.cs" />
-    <Compile Include="ImagePatchDistanceCalculator.cs" />
+    <Compile Include="Extensions\Area2DExtensions.cs" />
+    <Compile Include="Extensions\AreaMappingExtensions.cs" />
+    <Compile Include="PatchDistance\Cie2000ImagePatchDistanceCalculator.cs" />
+    <Compile Include="PatchDistance\Cie76ImagePatchDistanceCalculator.cs" />
+    <Compile Include="PatchDistance\ImagePatchDistance.cs" />
+    <Compile Include="PatchDistance\ImagePatchDistanceCalculator.cs" />
     <Compile Include="ParallelOptions.cs" />
     <Compile Include="IPatchMatchNnfBuilder.cs" />
     <Compile Include="MappedAreasInfo.cs" />
     <Compile Include="NeighboursCheckDirection.cs" />
-    <Compile Include="NnfExtensions.cs" />
+    <Compile Include="Extensions\NnfExtensions.cs" />
     <Compile Include="PatchMatchNnfBuilder.cs" />
     <Compile Include="PatchMatchSettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
