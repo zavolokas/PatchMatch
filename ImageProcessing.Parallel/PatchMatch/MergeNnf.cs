@@ -24,7 +24,7 @@ namespace Zavolokas.ImageProcessing.Parallel.PatchMatch
                 var nnfs = inputs.Select(i => i.Nnf).ToArray();
                 var maps = inputs.Select(i => i.Map).ToArray();
 
-                for (int i = 1; i < nnfs.Length-1; i++)
+                for (int i = 1; i < nnfs.Length; i++)
                 {
                     mergedData.Nnf.Merge(nnfs[i], mergedData.Map, maps[i], inputs[0].Settings );
 
@@ -33,8 +33,6 @@ namespace Zavolokas.ImageProcessing.Parallel.PatchMatch
                         .AddMapping(maps[i])
                         .Build();
                 }
-
-                return new[] { mergedData };
             }
 
             return new[] { inputs[0] };
