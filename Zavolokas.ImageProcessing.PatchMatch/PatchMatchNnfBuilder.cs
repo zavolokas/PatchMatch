@@ -177,7 +177,7 @@ namespace Zavolokas.ImageProcessing.PatchMatch
                         destPointX = destPointIndex % destImageWidth;
                         destPointY = destPointIndex / destImageWidth;
 
-                        PopulatePatchPixelsIndexes(destPatchPointIndexesP, destPointX, destPointY, patchSize, destImageWidth, destAvailablePixelsIndexesSet, out isPatchFit);
+                        Utils.PopulatePatchPixelsIndexes(destPatchPointIndexesP, destPointX, destPointY, patchSize, destImageWidth, destAvailablePixelsIndexesSet, out isPatchFit);
 
                         nnfPos = destPointIndex * 2;
 
@@ -194,7 +194,7 @@ namespace Zavolokas.ImageProcessing.PatchMatch
                             srcPointX = srcPointIndex % srcImageWidth;
                             srcPointY = srcPointIndex / srcImageWidth;
 
-                            PopulatePatchPixelsIndexes(srcPatchPointIndexesP, srcPointX, srcPointY, patchSize, srcImageWidth, mappedAreasInfo.SrcAreaPointsIndexesSet, out isPatchFit);
+                            Utils.PopulatePatchPixelsIndexes(srcPatchPointIndexesP, srcPointX, srcPointY, patchSize, srcImageWidth, mappedAreasInfo.SrcAreaPointsIndexesSet, out isPatchFit);
                         }
 
                         distance = patchDistanceCalculator.Calculate(destPatchPointIndexesP, srcPatchPointIndexesP, double.MaxValue,
@@ -404,7 +404,7 @@ namespace Zavolokas.ImageProcessing.PatchMatch
 
                         // We store our patch in a flat array of points for simplicity.
                         // Populate dest patch array with corresponding dest image points indexes.
-                        PopulatePatchPixelsIndexes(destPatchPixelsIndexesP, destPointX, destPointY, patchSize, destImageWidth, destAvailablePixelsIndexesSet, out isPatchFit);
+                        Utils.PopulatePatchPixelsIndexes(destPatchPixelsIndexesP, destPointX, destPointY, patchSize, destImageWidth, destAvailablePixelsIndexesSet, out isPatchFit);
 
                         // Obtain the mapped areas info with the destination area
                         // that contains the current dest point. In the associated
@@ -465,7 +465,7 @@ namespace Zavolokas.ImageProcessing.PatchMatch
                                 continue;
 
                             // Populate source patch array with corresponding source image points indexes
-                            PopulatePatchPixelsIndexes(srcPatchPixelsIndexesP, candidateSrcPointX, candidateSrcPointY, patchSize, srcImageWidth, mappedAreasInfo.SrcAreaPointsIndexesSet, out isPatchFit);
+                            Utils.PopulatePatchPixelsIndexes(srcPatchPixelsIndexesP, candidateSrcPointX, candidateSrcPointY, patchSize, srcImageWidth, mappedAreasInfo.SrcAreaPointsIndexesSet, out isPatchFit);
 
                             // Calculate distance between the patches
                             distance = patchDistanceCalculator.Calculate(destPatchPixelsIndexesP, srcPatchPixelsIndexesP, distanceToBestSrcPatch, destImagePixelsDataP, sourceImagePixelsDataP, destImage, srcImage, patchLength);
@@ -512,7 +512,7 @@ namespace Zavolokas.ImageProcessing.PatchMatch
                                 candidateSrcPointY = (int)(bestSrcPointY + (rnd.NextDouble() * 2 - 1.0) * searchRadius);
 
                                 // Populate source patch array with corresponding source image points indexes
-                                PopulatePatchPixelsIndexes(srcPatchPixelsIndexesP, candidateSrcPointX, candidateSrcPointY, patchSize, srcImageWidth, mappedAreasInfo.SrcAreaPointsIndexesSet, out isPatchFit);
+                                Utils.PopulatePatchPixelsIndexes(srcPatchPixelsIndexesP, candidateSrcPointX, candidateSrcPointY, patchSize, srcImageWidth, mappedAreasInfo.SrcAreaPointsIndexesSet, out isPatchFit);
                             }
 
                             // Calculate distance between the patches
@@ -536,48 +536,6 @@ namespace Zavolokas.ImageProcessing.PatchMatch
                     }
                 }
             });
-        }
-
-        /// <summary>
-        /// Populates tha patch with corresponding image pixel indexes.
-        /// </summary>
-        /// <param name="patchPixelsIndexesP">Pointer to the patch array to populate with pixel indexes.</param>
-        /// <param name="x">The x coordinate of the patch center point on the image.</param>
-        /// <param name="y">The y coordinate of the patch center point on the image.</param>
-        /// <param name="patchSize">Size of the patch.</param>
-        /// <param name="imageWidth">Width of the image.</param>
-        /// <param name="allowedPointIndexesSet">
-        /// The set of point indexes that can be used to fill the patch. 
-        /// Indexes that are outside of this set are not marked and can not be
-        /// taken into the consideration.
-        /// </param>
-        private static unsafe void PopulatePatchPixelsIndexes(int* patchPixelsIndexesP, int x, int y, int patchSize, int imageWidth, HashSet<int> allowedPointIndexesSet, out bool fits)
-        {
-            var patchOffset = (patchSize - 1) / 2;
-            var length = patchSize * patchSize;
-            int imagePointIndex;
-            int xOffs, yOffs;
-            fits = true;
-
-            for (int patchPointIndex = length - 1; patchPointIndex >= 0; patchPointIndex--)
-            {
-                // Convert patch point index to offset from the patch central point
-                xOffs = patchPointIndex % patchSize - patchOffset;
-                yOffs = patchPointIndex / patchSize - patchOffset;
-
-                // Find corresponding image point index
-                imagePointIndex = (y + yOffs) * imageWidth + x + xOffs;
-                if (allowedPointIndexesSet.Contains(imagePointIndex))
-                {
-                    *(patchPixelsIndexesP + patchPointIndex) = imagePointIndex;
-                }
-                else
-                {
-                    // Point is outside of the marked area.
-                    *(patchPixelsIndexesP + patchPointIndex) = -1;
-                    fits = false;
-                }
-            }
         }
 
         private static Tuple<int, int> GetAddModData(NeighboursCheckDirection direction, int destElementsCount)
