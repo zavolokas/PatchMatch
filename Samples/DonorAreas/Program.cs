@@ -35,14 +35,9 @@ namespace DonorAreas
                 .FromRgbToLab();
             srcBitmap.Dispose();
 
-            //var xw = destImage.Width / 2;
-            //var xh = destImage.Height / 2;
-
             var map = new Area2DMapBuilder()
                 .InitNewMap(Area2D.Create(0, 0, destImage.Width, destImage.Height), Area2D.Create(0, 0, srcImage.Width, srcImage.Height))
                 .AddAssociatedAreas(Area2D.Create(0, 0, destImage.Width, destImage.Height), Area2D.Create(600, 040, 100, 100))
-                //.AddAssociatedAreas(Area2D.Create(0, 0, destImage.Width, destImage.Height), Area2D.Create(0, 0, 600, 400))
-                //.ReduceDestArea(Area2D.Create(xw / 2, xh / 2, xw, xh))
                 .Build();
 
             byte patchSize = 5;
@@ -55,14 +50,16 @@ namespace DonorAreas
             };
             var calculator = ImagePatchDistance.Cie76;
 
-            var destImagePixelsArea = Area2D.Create(0, 0, destImage.Width, destImage.Height);
             var patchMatchNnfBuilder = new PatchMatchNnfBuilder();
 
             // Create the nnf for the small variant of the images
             // with a couple of iterations.
-            patchMatchNnfBuilder.RunRandomNnfInitIteration(nnf, destImage, srcImage, settings, calculator, map, destImagePixelsArea);
-            patchMatchNnfBuilder.RunBuildNnfIteration(nnf, destImage, srcImage, NeighboursCheckDirection.Forward, settings, calculator, map, destImagePixelsArea);
-            patchMatchNnfBuilder.RunBuildNnfIteration(nnf, destImage, srcImage, NeighboursCheckDirection.Backward, settings, calculator, map, destImagePixelsArea);
+            patchMatchNnfBuilder.RunRandomNnfInitIteration(nnf, destImage, srcImage, settings, calculator, map);
+            patchMatchNnfBuilder.RunBuildNnfIteration(nnf, destImage, srcImage, NeighboursCheckDirection.Forward, settings, calculator, map);
+            patchMatchNnfBuilder.RunBuildNnfIteration(nnf, destImage, srcImage, NeighboursCheckDirection.Backward, settings, calculator, map);
+            patchMatchNnfBuilder.RunBuildNnfIteration(nnf, destImage, srcImage, NeighboursCheckDirection.Forward, settings, calculator, map);
+            patchMatchNnfBuilder.RunBuildNnfIteration(nnf, destImage, srcImage, NeighboursCheckDirection.Backward, settings, calculator, map);
+            patchMatchNnfBuilder.RunBuildNnfIteration(nnf, destImage, srcImage, NeighboursCheckDirection.Forward, settings, calculator, map);
 
             // Restore dest image from the NNF and source image.
             nnf
