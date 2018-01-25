@@ -9,9 +9,9 @@ using Zavolokas.Utils.Processes;
 
 namespace ConsolePatchMatchPipeline
 {
-    class Program
+    public class Program
     {
-        static void Main(string[] args)
+        public static void Main()
         {
             const string basePath = "..\\..\\..\\images";
 
@@ -21,11 +21,15 @@ namespace ConsolePatchMatchPipeline
             // this is our input data.
             var destImage = GetLabImage(basePath, destImageName);
             var srcImage = GetLabImage(basePath, srcImageName);
-            var map = BuildMapping(destImage.Width, destImage.Height, srcImage.Width, srcImage.Height);
 
-            var input = new PmData(destImage, srcImage, map);
-            input.Settings.PatchSize = 5;
-            input.Settings.IterationsAmount = 2;
+            var input = new PmData(destImage, srcImage)
+            {
+                Settings =
+                {
+                    PatchSize = 5,
+                    IterationsAmount = 2
+                }
+            };
 
             var patchMatchNnfBuilder = new PatchMatchNnfBuilder();
 
@@ -52,22 +56,6 @@ namespace ConsolePatchMatchPipeline
                 .ShowFile();
 
             Console.WriteLine($"PatchMatchPipeline processing is finished.");
-        }
-
-        private static Area2DMap BuildMapping(int destWidth, int destHeight, int srcWidth, int srcHeight)
-        {
-            var mapBuilder = new Area2DMapBuilder();
-            mapBuilder.InitNewMap(
-                Area2D.Create(0, 0, destWidth, destHeight),
-                Area2D.Create(0, 0, srcWidth, srcHeight));
-
-            //var xw = 50;// destImage.Width / 2;
-            //var xh = 50;//destImage.Height / 2;
-            //mapBuilder.ReduceDestArea(Area2D.Create(200, 200, xw, xh));
-            ////.SetIgnoredSourcedArea();
-
-            var map = mapBuilder.Build();
-            return map;
         }
 
         private static ZsImage GetLabImage(string basePath, string fileName)
