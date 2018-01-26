@@ -3,7 +3,6 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using Zavolokas.GdiExtensions;
-using Zavolokas.ImageProcessing.Parallel.PatchMatch;
 using Zavolokas.ImageProcessing.PatchMatch;
 using Zavolokas.Structures;
 using Zavolokas.Utils.Processes;
@@ -17,48 +16,35 @@ namespace IgnoreArea
             const string basePath = "..\\..\\..\\images";
 
             // this is our input data.
-            var destBitmap = new Bitmap(Path.Combine(basePath, "pm1.png"));
-            var destImage = destBitmap
-                .ToRgbImage()
-                .FromRgbToLab();
-            destBitmap.Dispose();
-
-            var srcBitmap = new Bitmap(Path.Combine(basePath, "pm2.png"));
-            var srcImage = srcBitmap
-                .ToRgbImage()
-                .FromRgbToLab();
-            srcBitmap.Dispose();
-
-            var ignoreAreaBitmap = new Bitmap(Path.Combine(basePath, "pm2_ignore.png"));
-            var ignoreArea = ignoreAreaBitmap.ToArea();
-            ignoreAreaBitmap.Dispose();
+            var destImage = GetLabImage(basePath, "pm1.png");
+            var srcImage = GetLabImage(basePath, "pm2.png");
+            var ignoreArea = GetArea2D(basePath, "pm2_ignore.png");
 
             var map = new Area2DMapBuilder()
                 .InitNewMap(Area2D.Create(0, 0, destImage.Width, destImage.Height), Area2D.Create(0, 0, srcImage.Width, srcImage.Height))
                 .SetIgnoredSourcedArea(ignoreArea)
                 .Build();
 
-            var input = new PmData(destImage, srcImage, map)
-            {
-                Settings =
-                {
-                    PatchSize = 5,
-                    IterationsAmount = 2
-                }
-            };
-
+            // Prepage setting for the PM algorithm
+            const byte patchSize = 5;
+            var settings = new PatchMatchSettings { PatchSize = patchSize };
             var patchMatchNnfBuilder = new PatchMatchNnfBuilder();
+            
+            var nnf = new Nnf(destImage.Width, destImage.Height, srcImage.Width, srcImage.Height, patchSize);
+            var calculator = ImagePatchDistance.Cie76;
 
-            var nnfPipeline = new PatchMatchPipeline(patchMatchNnfBuilder, ImagePatchDistance.Cie76);
-            nnfPipeline.SetInput(input);
-            var nnf = nnfPipeline
-                .Process()
-                .Output[0]
-                .Nnf;
+            // Create the nnf for the small variant of the images
+            // with a couple of iterations.
+            patchMatchNnfBuilder.RunRandomNnfInitIteration(nnf, destImage, srcImage, settings, calculator, map);
+            patchMatchNnfBuilder.RunBuildNnfIteration(nnf, destImage, srcImage, NeighboursCheckDirection.Forward, settings, calculator, map);
+            patchMatchNnfBuilder.RunBuildNnfIteration(nnf, destImage, srcImage, NeighboursCheckDirection.Backward, settings, calculator, map);
+            patchMatchNnfBuilder.RunBuildNnfIteration(nnf, destImage, srcImage, NeighboursCheckDirection.Forward, settings, calculator, map);
+            patchMatchNnfBuilder.RunBuildNnfIteration(nnf, destImage, srcImage, NeighboursCheckDirection.Backward, settings, calculator, map);
+            patchMatchNnfBuilder.RunBuildNnfIteration(nnf, destImage, srcImage, NeighboursCheckDirection.Forward, settings, calculator, map);
 
             // Restore dest image from the NNF and source image.
             nnf
-                .RestoreImage(srcImage, 3, input.Settings.PatchSize)
+                .RestoreImage(srcImage, 3, settings.PatchSize)
                 .FromLabToRgb()
                 .FromRgbToBitmap()
                 .SaveTo(@"..\..\restored.png", ImageFormat.Png);
@@ -71,6 +57,29 @@ namespace IgnoreArea
                 .ShowFile();
 
             Console.WriteLine($"PatchMatchPipeline processing is finished.");
+        }
+
+        private static ZsImage GetLabImage(string basePath, string fileName)
+        {
+            ZsImage result;
+            var destFilePath = Path.Combine(basePath, fileName);
+            using (var destBitmap = new System.Drawing.Bitmap(destFilePath))
+            {
+                result = destBitmap.ToRgbImage()
+                    .FromRgbToLab();
+            }
+            return result;
+        }
+
+        private static Area2D GetArea2D(string basePath, string fileName)
+        {
+            Area2D result;
+            var destFilePath = Path.Combine(basePath, fileName);
+            using (var destBitmap = new Bitmap(destFilePath))
+            {
+                result = destBitmap.ToArea();
+            }
+            return result;
         }
     }
 }
