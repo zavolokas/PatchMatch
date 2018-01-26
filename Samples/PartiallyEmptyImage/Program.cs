@@ -33,13 +33,8 @@ namespace PartiallyEmptyImage
                 .Build();
 
             const byte patchSize = 5;
-            var settings = new PatchMatchSettings
-            {
-                PatchSize = patchSize,
-            };
-
+            var settings = new PatchMatchSettings {PatchSize = patchSize};
             var nnf = new Nnf(destImage.Width, destImage.Height, srcImage.Width, srcImage.Height, patchSize);
-            // Prepage setting for the PM algorithm
             var calculator = ImagePatchDistance.Cie76;
 
             var patchMatchNnfBuilder = new PatchMatchNnfBuilder();
