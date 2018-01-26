@@ -71,8 +71,47 @@ nnf
 | -------- | ---------- |
 | ![nnf] | ![restored]|
 
+### Advanced NNF building
+It is also possible to provide a mapping of particular areas on both dest and source images to be used or ignored.
+
+```csharp
+var mappings = new Area2DMapBuilder()
+    .InitNewMap(destImageArea, srcImageArea) // define area on the source that is used to get patches for the dest area
+    .AddAssociatedAreas(destImageArea1, srcImageArea1)) // defaine exceptional dest area for 
+                                                        // which patches should be found in the specified source area
+    .AddAssociatedAreas(destImageArea2, srcImageArea2)
+    .SetIgnoredSourcedArea(srcImageAreaToIgnore) // this area on the source will be ignored
+    .Build();
+```
+
+| Ignored source areas | Result image |
+| ----------- | ------ |
+| ![ignoredSrc]   | ![ignoredSrcResult]|
+    NOTE: All the yellowish parts are restored using other colors.
+
+| Destination area | NNF | Result image|
+| ----------- | ------ | ------ |
+| ![destArea] | ![destNnf] | ![destAreaResult]|
+    NOTE: NNF was built only for the specified dest area.
+
+| Dest image with donor areas | Source image with donor areas|
+| ----------- | ------ |
+| ![destDonors]   | ![srcDonors]|
+
+| NNF | Restored image|
+| -------- | ---------- |
+| ![donorsNnf] | ![donorsResult]|
+
 [input1]: images/pm1small.png "dest image"
 [input2]: images/pm2small.png "source image"
 [nnf]:images/nnf.png "NNF"
 [restored]: images/restored.png "restored" 
-
+[ignoredSrc]: images/ignoredSrc.png "ignored source areas"
+[ignoredSrcResult]: images/ignoredSrcResult.png "restored image"
+[destArea]: images/destArea.png "destination area"
+[destNnf]: images/destNnf.png "result NNF"
+[destAreaResult]: images/destAreaResult.png "restored image"
+[destDonors]: images/destDonors.png "dest image with donors"
+[srcDonors]: images/srcDonors.png "src image with donors"
+[donorsNnf]: images/donorsNnf,png "result NNF"
+[donorsResult]: images/donorsResult.png "result image"
