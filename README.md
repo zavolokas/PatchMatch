@@ -28,5 +28,51 @@ Both these methods take as arguments:
   - An image that is a source of patches for the destination image
   - Settings that control algorithm execution
 
-  ## Examples
-   
+## Examples
+### Simple NNF
+
+```csharp
+var settings = new PatchMatchSettings { PatchSize = 5 };
+// Create an NNF
+var nnf = new Nnf(destImage.Width, destImage.Height, srcImage.Width, srcImage.Height, settings.PatchSize);
+
+var patchMatchNnfBuilder = new PatchMatchNnfBuilder();
+
+// NNF initialization step
+patchMatchNnfBuilder.RunRandomNnfInitIteration(nnf, destImage, srcImage, settings, calculator, map);
+
+// Few iterations of NNF building in altering direction.
+patchMatchNnfBuilder.RunBuildNnfIteration(nnf, destImage, srcImage, NeighboursCheckDirection.Forward, settings);
+patchMatchNnfBuilder.RunBuildNnfIteration(nnf, destImage, srcImage, NeighboursCheckDirection.Backward, settings);
+patchMatchNnfBuilder.RunBuildNnfIteration(nnf, destImage, srcImage, NeighboursCheckDirection.Forward, settings);
+patchMatchNnfBuilder.RunBuildNnfIteration(nnf, destImage, srcImage, NeighboursCheckDirection.Backward, settings);
+patchMatchNnfBuilder.RunBuildNnfIteration(nnf, destImage, srcImage, NeighboursCheckDirection.Forward, settings);
+
+// Restore dest image from the NNF and source image.
+nnf
+    .RestoreImage(srcImage, 3, patchSize)
+    .FromLabToRgb()
+    .FromRgbToBitmap()
+    .SaveTo(@"..\..\restored.png", ImageFormat.Png);
+
+// Convert the NNF to an image and save.
+nnf
+    .ToRgbImage()
+    .FromRgbToBitmap()
+    .SaveTo(@"..\..\nnf.png", ImageFormat.Png);
+
+```
+
+| Dest image | Source image |
+| ----------- | ------ |
+| ![input1]   | ![input2]|
+
+| NNF | Restored image|
+| -------- | ---------- |
+| ![nnf] | ![restored]|
+
+[input1]: images/pm1small.png "dest image"
+[input2]: images/pm2small.png "source image"
+[nnf]:images/nnf.png "NNF"
+[restored]: images/restored.png "restored" 
+
