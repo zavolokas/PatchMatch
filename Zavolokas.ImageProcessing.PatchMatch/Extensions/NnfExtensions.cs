@@ -398,19 +398,25 @@ namespace Zavolokas.ImageProcessing.PatchMatch
         /// </summary>
         /// <param name="destNnf">The dest NNF.</param>
         /// <param name="srcNnf">The source NNF.</param>
-        /// <param name="destNnfMap">The dest NNF areas mapping(by default whole source area is mapped to the dest area).</param>
-        /// <param name="srcNnfMap">The source NNF areas mapping(by default whole source area is mapped to the dest area).</param>
+        /// <param name="destNnfMap">The dest NNF areas mapping.</param>
+        /// <param name="srcNnfMap">The source NNF areas mapping.</param>
         /// <param name="options">The parallel processing options.</param>
         /// <exception cref="ArgumentNullException">
         /// destNnf
         /// or
         /// srcNnf
+        /// or
+        /// destNnfMap
+        /// or
+        /// srcNnfMap
         /// </exception>
         /// <exception cref="ArgumentException">NNFs should be built for the same source and dest images</exception>
-        public static unsafe void Merge(this Nnf destNnf, Nnf srcNnf, Area2DMap destNnfMap = null, Area2DMap srcNnfMap = null, ParallelOptions options = null)
+        public static unsafe void Merge(this Nnf destNnf, Nnf srcNnf, Area2DMap destNnfMap, Area2DMap srcNnfMap, ParallelOptions options = null)
         {
             if (destNnf == null) throw new ArgumentNullException(nameof(destNnf));
             if (srcNnf == null) throw new ArgumentNullException(nameof(srcNnf));
+            if (destNnfMap == null) throw new ArgumentNullException(nameof(destNnfMap));
+            if (srcNnfMap == null) throw new ArgumentNullException(nameof(srcNnfMap));
 
             // We assume that all the inputs contain NNFs 
             // for the same dest image.
@@ -428,12 +434,6 @@ namespace Zavolokas.ImageProcessing.PatchMatch
             if (destNnf.DstWidth != srcNnf.DstWidth || destNnf.DstHeight != srcNnf.DstHeight
                 || destNnf.SourceWidth != srcNnf.SourceWidth || destNnf.SourceHeight != srcNnf.SourceHeight)
                 throw new ArgumentException("NNFs should be built for the same source and dest images");
-
-            // NNFs are built for particular areas that are defined in the corresponding mapping.
-            // When mappings are not provided, we assume NNF was built for the whole areas of the
-            // dest and source images.
-            if (destNnfMap == null) destNnfMap = CreateMapping(destNnf);
-            if (srcNnfMap == null) srcNnfMap = CreateMapping(srcNnf);
 
             if (options == null) options = new ParallelOptions();
 
