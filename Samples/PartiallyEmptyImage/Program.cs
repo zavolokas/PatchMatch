@@ -39,7 +39,7 @@ namespace PartiallyEmptyImage
 
             var patchMatchNnfBuilder = new PatchMatchNnfBuilder();
 
-            // Create the nnf for the small variant of the images
+            // Create the nnf the images
             // with a couple of iterations.
             patchMatchNnfBuilder.RunRandomNnfInitIteration(nnf, destImage, srcImage, settings, calculator, map, destPixelsArea);
             patchMatchNnfBuilder.RunBuildNnfIteration(nnf, destImage, srcImage, NeighboursCheckDirection.Forward, settings, calculator, map, destPixelsArea);
