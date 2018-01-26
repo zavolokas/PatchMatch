@@ -113,5 +113,5 @@ var mappings = new Area2DMapBuilder()
 [destAreaResult]: images/destAreaResult.png "restored image"
 [destDonors]: images/destDonors.png "dest image with donors"
 [srcDonors]: images/srcDonors.png "src image with donors"
-[donorsNnf]: images/donorsNnf,png "result NNF"
+[donorsNnf]: images/donorsNnf.png "result NNF"
 [donorsResult]: images/donorsResult.png "result image"
