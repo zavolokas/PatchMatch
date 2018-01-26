@@ -18,23 +18,12 @@ namespace NormalizeNnf
 
             var srcImageName = "t009.jpg";
 
-            // Prepare 2 source images - one small and another 2x bigger
-            var srcBitmap = new Bitmap(Path.Combine(basePath, srcImageName));
-            var srcImage = srcBitmap
-                .ToRgbImage()
-                .FromRgbToLab();
-            srcBitmap.Dispose();
+            // Prepare images
+            var srcImage = GetLabImage(basePath, srcImageName);
+            var destImage = GetLabImage(basePath, srcImageName);
 
-            var destBitmap = new Bitmap(Path.Combine(basePath, srcImageName));
-            var destImage = destBitmap
-                .ToRgbImage()
-                .FromRgbToLab();
-            destBitmap.Dispose();
-
-            var mrkpBitmap = new Bitmap(Path.Combine(basePath, "m009.png"));
-            var removeArea = mrkpBitmap.ToArea();
-            var destArea = removeArea.Dilation(patchSize * 2 + 1);
-            mrkpBitmap.Dispose();
+            var ignoreArea = GetArea2D(basePath, "m009.png");
+            var destArea = ignoreArea.Dilation(patchSize * 2 + 1);
 
             // Init an nnf
             var nnf = new Nnf(destImage.Width, destImage.Height, srcImage.Width, srcImage.Height, patchSize);
@@ -43,31 +32,26 @@ namespace NormalizeNnf
             var imageArea = Area2D.Create(0, 0, srcImage.Width, srcImage.Height);
             var map = new Area2DMapBuilder()
                 .InitNewMap(imageArea, imageArea)
-                .SetIgnoredSourcedArea(removeArea)
+                .SetIgnoredSourcedArea(ignoreArea)
                 .Build();
 
             // Prepage setting for the PM algorithm
-            var settings = new PatchMatchSettings
-            {
-                PatchSize = patchSize,
-                IterationsAmount = 2
-            };
-
+            var settings = new PatchMatchSettings { PatchSize = patchSize };
             var calculator = ImagePatchDistance.Cie76;
-
             var patchMatchNnfBuilder = new PatchMatchNnfBuilder();
 
-            // Create the nnf for the small variant of the images
+            // Create the nnf for the image(while ignoring some area) 
             // with a couple of iterations.
             patchMatchNnfBuilder.RunRandomNnfInitIteration(nnf, destImage, srcImage, settings, calculator, map);
             patchMatchNnfBuilder.RunBuildNnfIteration(nnf, destImage, srcImage, NeighboursCheckDirection.Forward, settings, calculator, map);
             patchMatchNnfBuilder.RunBuildNnfIteration(nnf, destImage, srcImage, NeighboursCheckDirection.Backward, settings, calculator, map);
 
-            // Create a mapping of the areas on the dest and source areas.
-            map = new Area2DMapBuilder() 
-                .InitNewMap(imageArea, imageArea) 
+            // Create a mapping for the area that is a bit bigger 
+            // then ignored area.
+            map = new Area2DMapBuilder()
+                .InitNewMap(imageArea, imageArea)
                 .ReduceDestArea(destArea)
-                .SetIgnoredSourcedArea(removeArea)
+                .SetIgnoredSourcedArea(ignoreArea)
                 .Build();
 
             patchMatchNnfBuilder.RunRandomNnfInitIteration(nnf, destImage, srcImage, settings, calculator, map);
@@ -80,8 +64,8 @@ namespace NormalizeNnf
                 .FromRgbToBitmap()
                 .SaveTo(fileName1, ImageFormat.Png);
 
-            // The scaling of the NNF from the small images to the bigger ones.
-            nnf.Normalize(removeArea);
+            // Normalize the NNF in the ignored area.
+            nnf.Normalize(ignoreArea);
 
             // Prepare results, save and show them
             string fileName2 = @"..\..\nnf2_normalized.png";
@@ -92,6 +76,29 @@ namespace NormalizeNnf
                 .ShowFile();
 
             Console.WriteLine($"Nnf normalization is finished.");
+        }
+
+        private static ZsImage GetLabImage(string basePath, string fileName)
+        {
+            ZsImage result;
+            var destFilePath = Path.Combine(basePath, fileName);
+            using (var destBitmap = new System.Drawing.Bitmap(destFilePath))
+            {
+                result = destBitmap.ToRgbImage()
+                    .FromRgbToLab();
+            }
+            return result;
+        }
+
+        private static Area2D GetArea2D(string basePath, string fileName)
+        {
+            Area2D result;
+            var destFilePath = Path.Combine(basePath, fileName);
+            using (var destBitmap = new Bitmap(destFilePath))
+            {
+                result = destBitmap.ToArea();
+            }
+            return result;
         }
     }
 }
