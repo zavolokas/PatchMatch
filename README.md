@@ -12,3 +12,21 @@ More information can be found in [this scientific publication](http://gfx.cs.pri
 
 ## What is it for?
 It can be used in image processing and image editing tools (inpainting, image reshuffling, content aware image resizing etc).
+
+## How to use it?
+In a nutshell **PatchMatch** algorithm consists of:
+  - random initialization step of NNF
+  - a number of search iterations
+
+`PatchMatchNnfBuilder` class defines two corresponding methods:
+  - `RunRandomNnfInitIteration`
+  - `RunBuildNnfIteration`
+
+Both these methods take as arguments:
+  - An instance of an NNF
+  - An image to build NNF for (destination)
+  - An image that is a source of patches for the destination image
+  - Settings that control algorithm execution
+
+  ## Examples
+   
