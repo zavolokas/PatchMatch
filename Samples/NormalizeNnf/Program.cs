@@ -40,10 +40,6 @@ namespace NormalizeNnf
             var nnf = new Nnf(destImage.Width, destImage.Height, srcImage.Width, srcImage.Height, patchSize);
 
             // Create a mapping of the areas on the dest and source areas.
-            //var map = new InpaintMapBuilder()
-            //    .InitNewMap(Area2D.Create(0, 0, srcImage.Width, srcImage.Height))
-            //    .SetInpaintArea(removeArea)
-            //    .Build();
             var imageArea = Area2D.Create(0, 0, srcImage.Width, srcImage.Height);
             var map = new Area2DMapBuilder()
                 .InitNewMap(imageArea, imageArea)
@@ -59,26 +55,24 @@ namespace NormalizeNnf
 
             var calculator = ImagePatchDistance.Cie76;
 
-            var destImagePixelsArea = Area2D.Create(0, 0, destImage.Width, destImage.Height);
             var patchMatchNnfBuilder = new PatchMatchNnfBuilder();
 
             // Create the nnf for the small variant of the images
             // with a couple of iterations.
-            patchMatchNnfBuilder.RunRandomNnfInitIteration(nnf, destImage, srcImage, settings, calculator, map, destImagePixelsArea);
-            patchMatchNnfBuilder.RunBuildNnfIteration(nnf, destImage, srcImage, NeighboursCheckDirection.Forward, settings, calculator, map, destImagePixelsArea);
-            patchMatchNnfBuilder.RunBuildNnfIteration(nnf, destImage, srcImage, NeighboursCheckDirection.Backward, settings, calculator, map, destImagePixelsArea);
+            patchMatchNnfBuilder.RunRandomNnfInitIteration(nnf, destImage, srcImage, settings, calculator, map);
+            patchMatchNnfBuilder.RunBuildNnfIteration(nnf, destImage, srcImage, NeighboursCheckDirection.Forward, settings, calculator, map);
+            patchMatchNnfBuilder.RunBuildNnfIteration(nnf, destImage, srcImage, NeighboursCheckDirection.Backward, settings, calculator, map);
 
             // Create a mapping of the areas on the dest and source areas.
-            map = new Area2DMapBuilder() //InpaintMapBuilder()
-                .InitNewMap(imageArea, imageArea) //Area2D.Create(0, 0, srcImage.Width, srcImage.Height))
+            map = new Area2DMapBuilder() 
+                .InitNewMap(imageArea, imageArea) 
                 .ReduceDestArea(destArea)
-                //.SetInpaintArea(removeArea)
                 .SetIgnoredSourcedArea(removeArea)
                 .Build();
 
-            patchMatchNnfBuilder.RunRandomNnfInitIteration(nnf, destImage, srcImage, settings, calculator, map, destImagePixelsArea);
-            patchMatchNnfBuilder.RunBuildNnfIteration(nnf, destImage, srcImage, NeighboursCheckDirection.Forward, settings, calculator, map, destImagePixelsArea);
-            patchMatchNnfBuilder.RunBuildNnfIteration(nnf, destImage, srcImage, NeighboursCheckDirection.Backward, settings, calculator, map, destImagePixelsArea);
+            patchMatchNnfBuilder.RunRandomNnfInitIteration(nnf, destImage, srcImage, settings, calculator, map);
+            patchMatchNnfBuilder.RunBuildNnfIteration(nnf, destImage, srcImage, NeighboursCheckDirection.Forward, settings, calculator, map);
+            patchMatchNnfBuilder.RunBuildNnfIteration(nnf, destImage, srcImage, NeighboursCheckDirection.Backward, settings, calculator, map);
 
             string fileName1 = @"..\..\nnf1_pure.png";
             nnf
