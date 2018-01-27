@@ -28,7 +28,6 @@ namespace TargetDestArea
 
             var map = new Area2DMapBuilder()
                 .InitNewMap(Area2D.Create(0, 0, destImage.Width, destImage.Height), Area2D.Create(0, 0, srcImage.Width, srcImage.Height))
-                .SetIgnoredSourcedArea(ignoreSrcArea)
                 .ReduceDestArea(targetDestArea)
                 .Build();
 

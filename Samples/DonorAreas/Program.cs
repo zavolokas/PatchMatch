@@ -19,21 +19,25 @@ namespace DonorAreas
 
             const string basePath = "..\\..\\..\\images";
 
-            var destImageName = "pm1small.png";
-            var srcImageName = "pm2small.png";
-            var destTargetImageName = "pm1small_target.png";
+            var destImageName = "pm1.png";
+            var srcImageName = "pm2.png";
+            var destTargetImageName = "dd1.png";
 
             // this is our input data.
             var destImage = GetLabImage(basePath, destImageName);
             var srcImage = GetLabImage(basePath, srcImageName);
 
-            var destTargetArea = GetArea2D(basePath, destTargetImageName);
+            var destTargetArea1 = GetArea2D(basePath, destTargetImageName);
+            var srcArea1 = GetArea2D(basePath, "sd1.png");
+            var destArea2 = GetArea2D(basePath, "dd2.png");
+            var srcArea2 = GetArea2D(basePath, "sd2.png");
             var destArea = Area2D.Create(0, 0, destImage.Width, destImage.Height);
             var srcArea = Area2D.Create(0, 0, srcImage.Width, srcImage.Height);
 
             var map = new Area2DMapBuilder()
                 .InitNewMap(destArea, srcArea)
-                .AddAssociatedAreas(destTargetArea, Area2D.Create(200, 0, 100, 200))
+                .AddAssociatedAreas(destTargetArea1, srcArea1)
+                .AddAssociatedAreas(destArea2, srcArea2)
                 .Build();
 
             const byte patchSize = 5;
