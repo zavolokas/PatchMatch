@@ -39,9 +39,9 @@ var nnf = new Nnf(destImage.Width, destImage.Height, srcImage.Width, srcImage.He
 var patchMatchNnfBuilder = new PatchMatchNnfBuilder();
 
 // NNF initialization step
-patchMatchNnfBuilder.RunRandomNnfInitIteration(nnf, destImage, srcImage, settings, calculator, map);
+patchMatchNnfBuilder.RunRandomNnfInitIteration(nnf, destImage, srcImage, settings);
 
-// Few iterations of NNF building in altering direction.
+// Few iterations of NNF building in altering directions.
 patchMatchNnfBuilder.RunBuildNnfIteration(nnf, destImage, srcImage, NeighboursCheckDirection.Forward, settings);
 patchMatchNnfBuilder.RunBuildNnfIteration(nnf, destImage, srcImage, NeighboursCheckDirection.Backward, settings);
 patchMatchNnfBuilder.RunBuildNnfIteration(nnf, destImage, srcImage, NeighboursCheckDirection.Forward, settings);
