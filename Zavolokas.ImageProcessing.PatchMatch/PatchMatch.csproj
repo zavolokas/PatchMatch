@@ -1,17 +1,19 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{8BB8E33C-58BF-48DC-BB26-A0C967F60674}</ProjectGuid>
+    <ProjectGuid>{47A272FE-4C5D-4FF6-B59C-EFE5466A923F}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Zavolokas.ImageProcessing.Parallel</RootNamespace>
-    <AssemblyName>Zavolokas.ImageProcessing.Parallel</AssemblyName>
+    <RootNamespace>Zavolokas.ImageProcessing.PatchMatch</RootNamespace>
+    <AssemblyName>Zavolokas.ImageProcessing.PatchMatch</AssemblyName>
     <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -21,6 +23,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -29,11 +32,9 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Grapute, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Grapute.1.0.0\lib\net462\Grapute.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -42,34 +43,32 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
+    <Reference Include="Zavolokas.Math, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Zavolokas.Math.1.0.0\lib\net462\Zavolokas.Math.dll</HintPath>
+    </Reference>
     <Reference Include="Zavolokas.Structures, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Zavolokas.Structures.1.0.1\lib\net462\Zavolokas.Structures.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="PatchMatch\MergeNnf.cs" />
-    <Compile Include="PatchMatch\NeighboursCheck.cs" />
-    <Compile Include="PatchMatch\NnfInit.cs" />
-    <Compile Include="PatchMatch\NnfSplit.cs" />
-    <Compile Include="PatchMatch\PatchMatchPipeline.cs" />
-    <Compile Include="PatchMatch\PmData.cs" />
+    <Compile Include="Extensions\Area2DExtensions.cs" />
+    <Compile Include="Extensions\AreaMappingExtensions.cs" />
+    <Compile Include="PatchDistance\Cie2000ImagePatchDistanceCalculator.cs" />
+    <Compile Include="PatchDistance\Cie76ImagePatchDistanceCalculator.cs" />
+    <Compile Include="PatchDistance\ImagePatchDistance.cs" />
+    <Compile Include="PatchDistance\ImagePatchDistanceCalculator.cs" />
+    <Compile Include="ParallelOptions.cs" />
+    <Compile Include="IPatchMatchNnfBuilder.cs" />
+    <Compile Include="MappedAreasInfo.cs" />
+    <Compile Include="NeighboursCheckDirection.cs" />
+    <Compile Include="Extensions\NnfExtensions.cs" />
+    <Compile Include="PatchMatchNnfBuilder.cs" />
+    <Compile Include="PatchMatchSettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Zavolokas.ImageProcessing.PatchMatch\Zavolokas.ImageProcessing.PatchMatch.csproj">
-      <Project>{47a272fe-4c5d-4ff6-b59c-efe5466a923f}</Project>
-      <Name>Zavolokas.ImageProcessing.PatchMatch</Name>
-    </ProjectReference>
+    <Compile Include="Utils.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>

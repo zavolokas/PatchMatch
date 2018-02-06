@@ -68,9 +68,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Zavolokas.ImageProcessing.PatchMatch\Zavolokas.ImageProcessing.PatchMatch.csproj">
+    <ProjectReference Include="..\..\Zavolokas.ImageProcessing.PatchMatch\PatchMatch.csproj">
       <Project>{47a272fe-4c5d-4ff6-b59c-efe5466a923f}</Project>
-      <Name>Zavolokas.ImageProcessing.PatchMatch</Name>
+      <Name>PatchMatch</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

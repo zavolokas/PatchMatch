@@ -68,13 +68,13 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\ImageProcessing.Parallel\Zavolokas.ImageProcessing.Parallel.csproj">
+    <ProjectReference Include="..\..\ImageProcessing.Parallel\Parallel.csproj">
       <Project>{8bb8e33c-58bf-48dc-bb26-a0c967f60674}</Project>
-      <Name>Zavolokas.ImageProcessing.Parallel</Name>
+      <Name>Parallel</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Zavolokas.ImageProcessing.PatchMatch\Zavolokas.ImageProcessing.PatchMatch.csproj">
+    <ProjectReference Include="..\..\Zavolokas.ImageProcessing.PatchMatch\PatchMatch.csproj">
       <Project>{47a272fe-4c5d-4ff6-b59c-efe5466a923f}</Project>
-      <Name>Zavolokas.ImageProcessing.PatchMatch</Name>
+      <Name>PatchMatch</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
