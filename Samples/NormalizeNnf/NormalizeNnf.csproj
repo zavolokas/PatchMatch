@@ -65,7 +65,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Zavolokas.ImageProcessing.PatchMatch\PatchMatch.csproj">
+    <ProjectReference Include="..\..\PatchMatch\PatchMatch.csproj">
       <Project>{47a272fe-4c5d-4ff6-b59c-efe5466a923f}</Project>
       <Name>PatchMatch</Name>
     </ProjectReference>

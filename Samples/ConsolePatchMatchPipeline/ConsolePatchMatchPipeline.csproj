@@ -68,11 +68,11 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\ImageProcessing.Parallel\Parallel.csproj">
+    <ProjectReference Include="..\..\Parallel\Parallel.csproj">
       <Project>{8bb8e33c-58bf-48dc-bb26-a0c967f60674}</Project>
       <Name>Parallel</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Zavolokas.ImageProcessing.PatchMatch\PatchMatch.csproj">
+    <ProjectReference Include="..\..\PatchMatch\PatchMatch.csproj">
       <Project>{47a272fe-4c5d-4ff6-b59c-efe5466a923f}</Project>
       <Name>PatchMatch</Name>
     </ProjectReference>
