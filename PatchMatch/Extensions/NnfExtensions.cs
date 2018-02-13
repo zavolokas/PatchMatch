@@ -234,7 +234,7 @@ namespace Zavolokas.ImageProcessing.PatchMatch
                                 mappedAreasInfo = mappedAreasInfos.FirstOrDefault(mai => mai.DestAreaPointsIndexesSet.Contains(destPointIndex));
                                 if (mappedAreasInfo != null)
                                 {
-                                    nnf2xData[destPointIndex * 2] = ((srcY + offs[i][1]) * nnf2xSourceWidth + (srcX + offs[i][0])) * 2;
+                                    nnf2xData[destPointIndex * 2] = (srcY * 2 + offs[i][1]) * nnf2xSourceWidth + (srcX * 2 + offs[i][0]);
                                     Utils.PopulatePatchPixelsIndexes(srcPatchPixelsIndexesP, srcX + offs[i][0], srcY + offs[i][1], patchSize, nnf2xSourceWidth, mappedAreasInfo.SrcAreaPointsIndexesSet, out isPatchFit);
                                     Utils.PopulatePatchPixelsIndexes(destPatchPixelsIndexesP, destX + offs[i][0], destY + offs[i][1], patchSize, destImageWidth, destAvailablePixelsIndexesSet, out isPatchFit);
                                     nnf2xData[destPointIndex * 2 + 1] = patchDistanceCalculator.Calculate(destPatchPixelsIndexesP, srcPatchPixelsIndexesP, double.MaxValue, destImagePixelsDataP, sourceImagePixelsDataP, scaledDestImage, scaledSrcImage, patchLength);
@@ -250,7 +250,7 @@ namespace Zavolokas.ImageProcessing.PatchMatch
                                     }
                                     else
                                     {
-                                        nnf2xData[destPointIndex * 2] = ((srcY + offs[i][1]) * nnf2xSourceWidth + (srcX + offs[i][0])) * 2;
+                                        nnf2xData[destPointIndex * 2] = (srcY * 2 + offs[i][1]) * nnf2xSourceWidth + (srcX * 2 + offs[i][0]);
                                         nnf2xData[destPointIndex * 2 + 1] = nnfData[destY * nnfDestWidth * 2 + destX * 2 + 1];
                                     }
                                 }
@@ -368,7 +368,7 @@ namespace Zavolokas.ImageProcessing.PatchMatch
                             mappedAreasInfo = mappedAreasInfos.FirstOrDefault(mai => mai.DestAreaPointsIndexesSet.Contains(destPointIndex));
                             if (mappedAreasInfo != null)
                             {
-                                nnf2xData[destPointIndex * 2] = ((srcY + offs[i][1]) * nnf2xSourceWidth + (srcX + offs[i][0])) * 2;
+                                nnf2xData[destPointIndex * 2] = (srcY * 2 + offs[i][1]) * nnf2xSourceWidth + (srcX * 2 + offs[i][0]);
                                 nnf2xData[destPointIndex * 2 + 1] = dist;
                             }
                             else
@@ -382,7 +382,7 @@ namespace Zavolokas.ImageProcessing.PatchMatch
                                 }
                                 else
                                 {
-                                    nnf2xData[destPointIndex * 2] = ((srcY + offs[i][1]) * nnf2xSourceWidth + (srcX + offs[i][0])) * 2;
+                                    nnf2xData[destPointIndex * 2] = (srcY * 2 + offs[i][1]) * nnf2xSourceWidth + (srcX * 2 + offs[i][0]);
                                     nnf2xData[destPointIndex * 2 + 1] = nnfData[destY * nnfDestWidth * 2 + destX * 2 + 1];
                                 }
                             }
