@@ -7,7 +7,7 @@ namespace Zavolokas.ImageProcessing.PatchMatch
         internal override unsafe double Calculate(int* destPatchImagePixelIndexesP, int* srcPatchImagePixelIndexesP, double maxDistance, double* destPixelsP, double* sourcePixelsP, ZsImage destImage, ZsImage srcImage, int patchLength)
         {
             // Constants for distance calculation
-            const double BiggestDistance = 22044.69;
+            const double BiggestDistance = 32668.1151;
             const double AvgDistance = BiggestDistance * .5;
 
             double distance = 0;
