@@ -4,6 +4,8 @@
 
 Implementation of **PatchMatch** algorithm for .NET.
 
+> PM> Install-Package Zavolokas.ImageProcessing.PatchMatch
+
 ## What is PatchMatch?
 This is an algorithm that finds similar patches at given images and builds a **nearest neighbor field (NNF)**. 
 
