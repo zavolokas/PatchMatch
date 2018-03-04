@@ -14,7 +14,7 @@
     <tags>PatchMatch NNF NearestNeighbourField ImageProcessing</tags>
     <dependencies>
       <dependency id="Zavolokas.Math" version="1.0.0" />
-      <dependency id="Zavolokas.Structures" version="1.0.1" />
+      <dependency id="Zavolokas.Structures" version="1.0.2" />
     </dependencies>
   </metadata>
 </package>
