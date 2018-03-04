@@ -107,7 +107,7 @@ namespace Zavolokas.ImageProcessing.PatchMatch
             if (areasMapping == null) throw new ArgumentNullException(nameof(areasMapping));
             if (destPixelsArea == null) throw new ArgumentNullException(nameof(destPixelsArea));
 
-            const byte MaxAttempts = 128;
+            const byte MaxAttempts = 32;
 
             var nnfdata = nnf.GetNnfItems();
             var patchSize = settings.PatchSize;
@@ -191,15 +191,15 @@ namespace Zavolokas.ImageProcessing.PatchMatch
 
                         isPatchFit = false;
                         attemptsCount = 0;
-                        while (!isPatchFit)
+                        var srcPointsAmount = mappedAreasInfo.SrcAreaPointsIndexes.Length;
+                        while (!isPatchFit && attemptsCount < MaxAttempts && attemptsCount < srcPointsAmount)
                         {
-                            srcPointIndex = mappedAreasInfo.SrcAreaPointsIndexes[rnd.Next(mappedAreasInfo.SrcAreaPointsIndexes.Length)];
+                            srcPointIndex = mappedAreasInfo.SrcAreaPointsIndexes[rnd.Next(srcPointsAmount)];
                             srcPointX = srcPointIndex % srcImageWidth;
                             srcPointY = srcPointIndex / srcImageWidth;
 
                             Utils.PopulatePatchPixelsIndexes(srcPatchPointIndexesP, srcPointX, srcPointY, patchSize, srcImageWidth, mappedAreasInfo.SrcAreaPointsIndexesSet, out isPatchFit);
-                            attemptsCount ++;
-                            if (attemptsCount > MaxAttempts) break;
+                            attemptsCount++;
                         }
 
                         distance = patchDistanceCalculator.Calculate(destPatchPointIndexesP, srcPatchPointIndexesP, double.MaxValue,
