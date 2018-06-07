@@ -7,9 +7,16 @@ Implementation of **PatchMatch** algorithm for .NET.
 > PM> Install-Package Zavolokas.ImageProcessing.PatchMatch
 
 ## What is PatchMatch?
-This is an algorithm that finds similar patches at given images and builds a **nearest neighbor field (NNF)**. 
+The core **PatchMatch** algorithm quickly finds correspondences between an image patches(small square regions). The algorithm can be used in various applications such as:
+- [inpsinting(object removal from images)](https://github.com/zavolokas/Inpainting)
+- reshuffling or moving contents of images
+- retargeting or changing aspect ratios of images
+- optical flow estimation
+- stereo correspondence.
 
-The main advantage of the algorithm is that it is quite fast. It is based on the observations that some of the good matches can be found randomly and that these results can be propagated to the neighbour areas due to natural coherence of images.
+The main advantage of the algorithm is that it is fast. It is based on the observations that some of the good matches can be found randomly and that these results can be propagated to the neighbour areas due to natural coherence of images.
+
+As an output the algorithm provides built **nearest neighbor field (NNF)** of correspondences between patches of two images. 
 
 More information can be found in [this scientific publication](http://gfx.cs.princeton.edu/pubs/Barnes_2009_PAR/index.php).
 
