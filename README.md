@@ -9,8 +9,8 @@ Implementation of **PatchMatch** algorithm for .NET.
 ## What is PatchMatch?
 The core **PatchMatch** algorithm quickly finds correspondences between an image patches(small square regions). The algorithm can be used in various applications such as:
 - [inpsinting(object removal from images)](https://github.com/zavolokas/Inpainting)
-- reshuffling or moving contents of images
-- retargeting or changing aspect ratios of images
+- [reshuffling or moving contents of images](https://www.youtube.com/watch?v=IPXqWBvbrIQ)
+- [retargeting or changing aspect ratios of images](https://people.csail.mit.edu/mrub/papers/retBenchmark.pdf)
 - optical flow estimation
 - stereo correspondence.
 
