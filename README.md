@@ -18,6 +18,8 @@ The main advantage of the algorithm is that it is fast. It is based on the obser
 
 As an output the algorithm provides built **nearest neighbor field (NNF)** of correspondences between patches of two images. 
 
+As an output the algorithm provides built **nearest neighbor field (NNF)** of correspondences between patches of two images. 
+
 More information can be found in [this scientific publication](http://gfx.cs.princeton.edu/pubs/Barnes_2009_PAR/index.php).
 
 ## What is it for?
