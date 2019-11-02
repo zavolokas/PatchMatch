@@ -24,8 +24,8 @@ steps:
         from_secret: NUGET_KEY
     commands:
       - dotnet build PatchMatch -c Release
-      - dotnet pack PatchMatch -c Release -p:PackageVersion=2.0.0.$${DRONE_TAG}
-      - dotnet nuget push PatchMatch/bin/Release/PatchMatch.2.0.0.$${DRONE_TAG}.nupkg -s https://api.nuget.org/v3/index.json -k $${NUGETKEY}
+      - dotnet pack PatchMatch -c Release -p:PackageVersion=$${DRONE_TAG}
+      - dotnet nuget push PatchMatch/bin/Release/PatchMatch.$${DRONE_TAG}.nupkg -s https://api.nuget.org/v3/index.json -k $${NUGETKEY}
     when:
       event: [tag]
       branch: [master]
@@ -37,8 +37,8 @@ steps:
         from_secret: NUGET_KEY
     commands:
       - dotnet build Parallel -c Release
-      - dotnet pack Parallel -c Release -p:PackageVersion=2.0.0.$${DRONE_TAG}
-      - dotnet nuget push Parallel/bin/Release/Parallel.2.0.0.$${DRONE_TAG}.nupkg -s https://api.nuget.org/v3/index.json -k $${NUGETKEY}
+      - dotnet pack Parallel -c Release -p:PackageVersion=$${DRONE_TAG}
+      - dotnet nuget push Parallel/bin/Release/Parallel.$${DRONE_TAG}.nupkg -s https://api.nuget.org/v3/index.json -k $${NUGETKEY}
     when:
       event: [tag]
       branch: [master]
