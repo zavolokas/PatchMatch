@@ -23,6 +23,7 @@ steps:
       NUGETKEY:
         from_secret: NUGET_KEY
     commands:
+      - echo $${DRONE_TAG}
       - dotnet pack PatchMatch -c Release -p:PackageVersion=2.0.0.$${DRONE_BUILD_NUMBER}
       - dotnet nuget push PatchMatch/bin/Release/PatchMatch.2.0.0.$${DRONE_BUILD_NUMBER}.nupkg -s https://api.nuget.org/v3/index.json -k $${NUGETKEY}
     when:
