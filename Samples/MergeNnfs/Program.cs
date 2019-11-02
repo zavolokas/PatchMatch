@@ -13,7 +13,7 @@ namespace MergeNnfs
     {
         static void Main(string[] args)
         {
-            const string basePath = "..\\..\\..\\images";
+            const string basePath = "..\\..\\..\\..\\images";
 
             var destImageName = "pm1.png";
             var srcImageName = "pm2.png";
@@ -66,23 +66,23 @@ namespace MergeNnfs
                 .RestoreImage(srcImage, 3, settings.PatchSize)
                 .FromLabToRgb()
                 .FromRgbToBitmap()
-                .SaveTo(@"..\..\restored1.png", ImageFormat.Png);
+                .SaveTo(@"..\..\..\restored1.png", ImageFormat.Png);
 
             nnf1
                 .RestoreImage(srcImage, 3, settings.PatchSize)
                 .FromLabToRgb()
                 .FromRgbToBitmap()
-                .SaveTo(@"..\..\restored2.png", ImageFormat.Png);
+                .SaveTo(@"..\..\..\restored2.png", ImageFormat.Png);
 
             nnf1
                 .ToRgbImage()
                 .FromRgbToBitmap()
-                .SaveTo(@"..\..\nnf1.png", ImageFormat.Png);
+                .SaveTo(@"..\..\..\nnf1.png", ImageFormat.Png);
 
             nnf2
                 .ToRgbImage()
                 .FromRgbToBitmap()
-                .SaveTo(@"..\..\nnf2.png", ImageFormat.Png);
+                .SaveTo(@"..\..\..\nnf2.png", ImageFormat.Png);
 
 
             // Let's now merge the built NNFs and try to restore an image
@@ -92,12 +92,12 @@ namespace MergeNnfs
                 .RestoreImage(srcImage, 3, settings.PatchSize)
                 .FromLabToRgb()
                 .FromRgbToBitmap()
-                .SaveTo(@"..\..\restored_whole.png", ImageFormat.Png);
+                .SaveTo(@"..\..\..\restored_whole.png", ImageFormat.Png);
 
             nnf2
                 .ToRgbImage()
                 .FromRgbToBitmap()
-                .SaveTo(@"..\..\merged_nnf.png", ImageFormat.Png)
+                .SaveTo(@"..\..\..\merged_nnf.png", ImageFormat.Png)
                 .ShowFile();
 
             Console.WriteLine($"PatchMatchPipeline processing is finished.");

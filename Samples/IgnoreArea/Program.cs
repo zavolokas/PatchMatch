@@ -13,7 +13,7 @@ namespace IgnoreArea
     {
         static void Main(string[] args)
         {
-            const string basePath = "..\\..\\..\\images";
+            const string basePath = "..\\..\\..\\..\\images";
 
             // this is our input data.
             var destImage = GetLabImage(basePath, "pm1.png");
@@ -47,13 +47,13 @@ namespace IgnoreArea
                 .RestoreImage(srcImage, 3, settings.PatchSize)
                 .FromLabToRgb()
                 .FromRgbToBitmap()
-                .SaveTo(@"..\..\restored.png", ImageFormat.Png);
+                .SaveTo(@"..\..\..\restored.png", ImageFormat.Png);
 
             // Convert the NNF to an image, save and show it
             nnf
                 .ToRgbImage()
                 .FromRgbToBitmap()
-                .SaveTo(@"..\..\nnf.png", ImageFormat.Png)
+                .SaveTo(@"..\..\..\nnf.png", ImageFormat.Png)
                 .ShowFile();
 
             Console.WriteLine($"PatchMatchPipeline processing is finished.");

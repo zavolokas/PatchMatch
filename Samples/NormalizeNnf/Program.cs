@@ -13,7 +13,7 @@ namespace NormalizeNnf
     {
         static void Main(string[] args)
         {
-            const string basePath = "..\\..\\..\\images";
+            const string basePath = "..\\..\\..\\..\\images";
             const int patchSize = 5;
 
             var srcImageName = "t009.jpg";
@@ -58,7 +58,7 @@ namespace NormalizeNnf
             patchMatchNnfBuilder.RunBuildNnfIteration(nnf, destImage, srcImage, NeighboursCheckDirection.Forward, settings, calculator, map);
             patchMatchNnfBuilder.RunBuildNnfIteration(nnf, destImage, srcImage, NeighboursCheckDirection.Backward, settings, calculator, map);
 
-            string fileName1 = @"..\..\nnf1_pure.png";
+            string fileName1 = @"..\..\..\nnf1_pure.png";
             nnf
                 .ToRgbImage()
                 .FromRgbToBitmap()
@@ -68,7 +68,7 @@ namespace NormalizeNnf
             nnf.Normalize(ignoreArea);
 
             // Prepare results, save and show them
-            string fileName2 = @"..\..\nnf2_normalized.png";
+            string fileName2 = @"..\..\..\nnf2_normalized.png";
             nnf
                 .ToRgbImage()
                 .FromRgbToBitmap()

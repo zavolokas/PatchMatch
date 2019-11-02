@@ -12,7 +12,7 @@ namespace Reshuffling
     {
         static void Main(string[] args)
         {
-            const string basePath = "..\\..\\..\\images";
+            const string basePath = "..\\..\\..\\..\\images";
 
             ZsImage srcImage = GetArgbImage(basePath, "t009.jpg");
             ZsImage destImage = srcImage.Clone();
@@ -22,7 +22,7 @@ namespace Reshuffling
 
             destImage.CopyFromImage(destMarkup, destImage, srcMarkup);
             destImage.FromArgbToBitmap()
-                .SaveTo("..\\..\\target.png", ImageFormat.Png);
+                .SaveTo("..\\..\\..\\target.png", ImageFormat.Png);
 
             // Prepage setting for the PM algorithm
             const byte patchSize = 5;
@@ -41,7 +41,7 @@ namespace Reshuffling
                 .Clone()
                 .FromLabToRgb()
                 .FromRgbToBitmap()
-                .SaveTo($"..\\..\\dest.png", ImageFormat.Png);
+                .SaveTo($"..\\..\\..\\dest.png", ImageFormat.Png);
 
             var patchMatchNnfBuilder = new PatchMatchNnfBuilder();
 
@@ -57,12 +57,12 @@ namespace Reshuffling
 
             nnf.ToRgbImage()
                 .FromRgbToBitmap()
-                .SaveTo($"..\\..\\nnf.png", ImageFormat.Png);
+                .SaveTo($"..\\..\\..\\nnf.png", ImageFormat.Png);
 
             nnf.RestoreImage(srcImage, 3, patchSize)
                 .FromLabToRgb()
                 .FromRgbToBitmap()
-                .SaveTo($"..\\..\\restored.png", ImageFormat.Png);
+                .SaveTo($"..\\..\\..\\restored.png", ImageFormat.Png);
         }
 
         private static ZsImage GetArgbImage(string basePath, string fileName)

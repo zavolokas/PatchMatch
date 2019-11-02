@@ -1,2 +1,7 @@
 language: csharp
-solution: PatchMatch.sln
+mono: none
+sudo: required
+dotnet: 2.2
+script:
+    - dotnet restore
+    - dotnet build

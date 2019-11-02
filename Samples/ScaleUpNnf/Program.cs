@@ -13,7 +13,7 @@ namespace ScaleUpNnf
     {
         static void Main(string[] args)
         {
-            const string basePath = "..\\..\\..\\images";
+            const string basePath = "..\\..\\..\\..\\images";
             const string srcImageName = "pm1.png";
             const string destImageName = "pm2.png";
             const int patchSize = 5;
@@ -66,12 +66,12 @@ namespace ScaleUpNnf
                 .RestoreImage(srcImage, 3, patchSize)
                 .FromLabToRgb()
                 .FromRgbToBitmap()
-                .SaveTo(@"..\..\l2r.png", ImageFormat.Png);
+                .SaveTo(@"..\..\..\l2r.png", ImageFormat.Png);
 
             scaledNnf
                 .ToRgbImage()
                 .FromRgbToBitmap()
-                .SaveTo(@"..\..\l2n.png", ImageFormat.Png)
+                .SaveTo(@"..\..\..\l2n.png", ImageFormat.Png)
                 .ShowFile();
 
             Console.WriteLine($"NnfScaleUp processing is finished.");

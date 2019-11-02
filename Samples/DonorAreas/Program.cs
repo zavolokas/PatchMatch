@@ -17,7 +17,7 @@ namespace DonorAreas
             var sw = new Stopwatch();
             sw.Start();
 
-            const string basePath = "..\\..\\..\\images";
+            const string basePath = "..\\..\\..\\..\\images";
 
             var destImageName = "pm1.png";
             var srcImageName = "pm2.png";
@@ -65,13 +65,13 @@ namespace DonorAreas
                 .RestoreImage(srcImage, 3, patchSize)
                 .FromLabToRgb()
                 .FromRgbToBitmap()
-                .SaveTo(@"..\..\restored.png", ImageFormat.Png);
+                .SaveTo(@"..\..\..\restored.png", ImageFormat.Png);
 
             // Convert the NNF to an image, save and show it
             nnf
                 .ToRgbImage()
                 .FromRgbToBitmap()
-                .SaveTo(@"..\..\nnf.png", ImageFormat.Png)
+                .SaveTo(@"..\..\..\nnf.png", ImageFormat.Png)
                 .ShowFile();
 
             sw.Stop();

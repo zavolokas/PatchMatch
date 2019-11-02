@@ -13,7 +13,7 @@ namespace ConsolePatchMatchPipeline
     {
         public static void Main()
         {
-            const string basePath = "..\\..\\..\\images";
+            const string basePath = "..\\..\\..\\..\\images";
 
             var destImageName = "pm1.png";
             var srcImageName = "pm2.png";
@@ -46,13 +46,13 @@ namespace ConsolePatchMatchPipeline
                 .RestoreImage(srcImage, 3, input.Settings.PatchSize)
                 .FromLabToRgb()
                 .FromRgbToBitmap()
-                .SaveTo(@"..\..\restored.png", ImageFormat.Png);
+                .SaveTo(@"..\..\..\restored.png", ImageFormat.Png);
 
             // Convert the NNF to an image, save and show it
             nnf
                 .ToRgbImage()
                 .FromRgbToBitmap()
-                .SaveTo(@"..\..\nnf.png", ImageFormat.Png)
+                .SaveTo(@"..\..\..\nnf.png", ImageFormat.Png)
                 .ShowFile();
 
             Console.WriteLine($"PatchMatchPipeline processing is finished.");

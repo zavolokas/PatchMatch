@@ -1,0 +1,42 @@
+kind: pipeline
+type: docker
+name: default
+
+steps:
+  - name: build-patch-match
+    image: microsoft/dotnet:2.0-sdk
+    commands:
+      - dotnet build PatchMatch -c Release
+    when:
+      event: [push]
+
+  - name: build-parallel
+    image: microsoft/dotnet:2.0-sdk
+    commands:
+      - dotnet build Parallel -c Release
+    when:
+      event: [push]
+
+  - name: publish-patch-match-nuget
+    image: microsoft/dotnet:2.0-sdk
+    environment:
+      NUGETKEY:
+        from_secret: NUGET_KEY
+    commands:
+      - dotnet pack PatchMatch -c Release -p:PackageVersion=2.0.0.$${DRONE_BUILD_NUMBER}
+      - dotnet nuget push PatchMatch/bin/Release/PatchMatch.2.0.0.$${DRONE_BUILD_NUMBER}.nupkg -s https://api.nuget.org/v3/index.json -k $${NUGETKEY}
+    when:
+      event: [tag]
+      branch: [master]
+  
+  - name: publish-parallel-nuget
+    image: microsoft/dotnet:2.0-sdk
+    environment:
+      NUGETKEY:
+        from_secret: NUGET_KEY
+    commands:
+      - dotnet pack Parallel -c Release -p:PackageVersion=2.0.0.$${DRONE_BUILD_NUMBER}
+      - dotnet nuget push Parallel/bin/Release/Parallel.2.0.0.$${DRONE_BUILD_NUMBER}.nupkg -s https://api.nuget.org/v3/index.json -k $${NUGETKEY}
+    when:
+      event: [tag]
+      branch: [master]

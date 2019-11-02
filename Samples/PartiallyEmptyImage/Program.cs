@@ -13,7 +13,7 @@ namespace PartiallyEmptyImage
     {
         static void Main(string[] args)
         {
-            const string basePath = "..\\..\\..\\images";
+            const string basePath = "..\\..\\..\\..\\images";
 
             var destImageName = "pm2small.png";
             var srcImageName = "pm1small.png";
@@ -53,13 +53,13 @@ namespace PartiallyEmptyImage
                 .RestoreImage(srcImage, 3, settings.PatchSize)
                 .FromLabToRgb()
                 .FromRgbToBitmap()
-                .SaveTo(@"..\..\restored.png", ImageFormat.Png);
+                .SaveTo(@"..\..\..\restored.png", ImageFormat.Png);
 
             // Convert the NNF to an image, save and show it
             nnf
                 .ToRgbImage()
                 .FromRgbToBitmap()
-                .SaveTo(@"..\..\nnf.png", ImageFormat.Png)
+                .SaveTo(@"..\..\..\nnf.png", ImageFormat.Png)
                 .ShowFile();
 
             Console.WriteLine($"PatchMatchPipeline processing is finished.");
