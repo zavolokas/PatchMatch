@@ -25,7 +25,7 @@ steps:
     commands:
       - dotnet build PatchMatch -c Release
       - dotnet pack PatchMatch -c Release -p:PackageVersion=$${DRONE_TAG}
-      - dotnet nuget push PatchMatch/bin/Release/PatchMatch.$${DRONE_TAG}.nupkg -s https://api.nuget.org/v3/index.json -k $${NUGETKEY}
+      - dotnet nuget push PatchMatch/bin/Release/Zavolokas.ImageProcessing.PatchMatch.$${DRONE_TAG}.nupkg -s https://api.nuget.org/v3/index.json -k $${NUGETKEY}
     when:
       event: [tag]
       branch: [master]
@@ -38,7 +38,7 @@ steps:
     commands:
       - dotnet build Parallel -c Release
       - dotnet pack Parallel -c Release -p:PackageVersion=$${DRONE_TAG}
-      - dotnet nuget push Parallel/bin/Release/Parallel.$${DRONE_TAG}.nupkg -s https://api.nuget.org/v3/index.json -k $${NUGETKEY}
+      - dotnet nuget push Parallel/bin/Release/Zavolokas.ImageProcessing.Parallel.$${DRONE_TAG}.nupkg -s https://api.nuget.org/v3/index.json -k $${NUGETKEY}
     when:
       event: [tag]
       branch: [master]
